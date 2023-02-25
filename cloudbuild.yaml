@@ -1,0 +1,48 @@
+steps:
+  - name: "gcr.io/cloud-builders/git"
+    secretEnv: ["SSH_KEY"]
+    entrypoint: "bash"
+    args:
+      - -c
+      - |
+        echo "$$SSH_KEY" >> /root/.ssh/id_rsa
+        chmod 400 /root/.ssh/id_rsa
+        cp known_hosts.bitbucket /root/.ssh/known_hosts
+    volumes:
+      - name: "ssh"
+        path: /root/.ssh
+
+  # Clone the repository
+  - name: "gcr.io/cloud-builders/git"
+    args:
+      - clone
+      - --recurse-submodules
+      - git@bitbucket.org:csgllc/aurora-admin-web
+    volumes:
+      - name: "ssh"
+        path: /root/.ssh
+  - name: node
+    entrypoint: npm
+    args: ["install"]
+  - name: node
+    secretEnv: ["API_KEY", "SENDER_ID", "APP_ID"]
+    env:
+      - "PROJECT_ID=$PROJECT_ID"
+      - "_RELEASE=$_RELEASE"
+      - "_SERVER=$_SERVER"
+      - "_AURORA_URL=$_AURORA_URL"
+    entrypoint: npm
+    args: ["run", "build"]
+  - name: gcr.io/cloud-builders/gsutil
+    args: ["-m", "rsync", "-r", "-c", "-d", "./build", "gs://$_SOURCE"]
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/my-stro/secrets/bitbucket-build/versions/latest
+      env: "SSH_KEY"
+    - versionName: projects/audit-signal-auditor/secrets/audit-signal-web-key/versions/latest
+      env: "API_KEY"
+    - versionName: projects/audit-signal-auditor/secrets/audit-signal-web-sender-id/versions/latest
+      env: "SENDER_ID"
+    - versionName: projects/audit-signal-auditor/secrets/audit-signal-web-app-id/versions/latest
+      env: "APP_ID"
