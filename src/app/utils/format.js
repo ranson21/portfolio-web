@@ -13,33 +13,6 @@ export const a11yProps = index => ({
  */
 export const selectInputValue = (target, range) => target.setSelectionRange(0, range || target.value.length);
 
-/**
- * Applies or removes a border based on the event and direction
- * @param {string} className -- Name of the class that should be applied
- * @param {string} status -- The status determining whether to add or remove the class
- */
-export const setBorder = (className, status) => event => {
-  // Stop propagation of the border effect
-  event.stopPropagation();
-  event.preventDefault();
-
-  // Add or remove the class based on the status
-  if (status === 'on') {
-    event.target.classList.add(className);
-  } else {
-    event.target.classList.remove(className);
-  }
-};
-
-/**
- * Helper method to use either the component name if set or type if not
- * @param {Object} component -- The component object containing either a user-supplied name or the library-defined type
- * @returns {String} -- The type of component to render, this will be library-defined
- */
-export const componentType = component => component?.name || component?.type;
-
-export const formatName = (name, user) => (name === user?.name ? `${name} (Me)` : name);
-
 export const formatDate = (dateString, format) => {
   // Convert the date string to a date object
   const date = new Date(dateString);
@@ -76,33 +49,6 @@ export const filterDirty = (dirtyFields, values) =>
     }),
     {}
   );
-
-/**
- * FormatLicense -- Groups the list of available licenses by rolej
- * @param {array} licenses -- The list of licenses for a specific account
- * @returns {array} -- The list of available licenses grouped by role
- */
-export const formatLicenses = licenses => {
-  const grouped = licenses
-    .filter(license => !license.assignedTo)
-    .reduce(
-      (list, license) => ({
-        ...list,
-        [license.role]: {
-          count: list[license.role]?.count ? list[license.role].count + 1 : 1,
-          name: `${license.role} (${list[license.role]?.count + 1 || 1} Available)`,
-        },
-      }),
-      {}
-    );
-
-  const options = Object.keys(grouped).map(option => ({
-    id: option,
-    name: grouped[option].name,
-  }));
-
-  return options;
-};
 
 /**
  * FormatDisplayName -- Converts a user display name to a URL friendly format
