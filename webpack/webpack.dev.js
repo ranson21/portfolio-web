@@ -1,76 +1,61 @@
-const webpack = require("webpack");
-const writeFilePlugin = require("write-file-webpack-plugin");
-const webpackMerge = require("webpack-merge");
-const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
-const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
-const WebpackNotifierPlugin = require("webpack-notifier");
-const path = require("path");
+const webpack = require('webpack');
+const writeFilePlugin = require('write-file-webpack-plugin');
+const { merge } = require('webpack-merge');
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin');
+const WebpackNotifierPlugin = require('webpack-notifier');
+const path = require('path');
 
-const commonConfig = require("./webpack.common.js");
+const commonConfig = require('./webpack.common.js');
 
-const ENV = "development";
+const ENV = 'development';
 
 // Create an API dictionary to toggle local development of each endpoint
 const targets = {
   auth: {
-    local: "http://localhost:8001",
+    local: 'http://localhost:8001',
     dev: `http://${process.env.HOST}`,
   },
 };
 
 // Create a helper function that determines whether to enable the local or minikube service instance
-const localTarget = (type) =>
-  process.env.LOCAL_SERVICES && process.env.LOCAL_SERVICES.includes(type);
+const localTarget = type => process.env.LOCAL_SERVICES && process.env.LOCAL_SERVICES.includes(type);
 
-module.exports = (options) =>
-  webpackMerge(commonConfig({ env: ENV }), {
-    devtool: "cheap-module-source-map", // https://reactjs.org/docs/cross-origin-errors.html
+module.exports = options =>
+  merge(commonConfig({ env: ENV }), {
+    devtool: 'cheap-module-source-map', // https://reactjs.org/docs/cross-origin-errors.html
     mode: ENV,
-    entry: [
-      "react-hot-loader/patch",
-      "./src/app/utils/prototypes",
-      "./src/app/index.jsx",
-    ],
+    entry: ['./src/app/index.jsx'],
     output: {
-      path: path.resolve(__dirname, "..", "build"),
-      filename: "app/[name].bundle.js",
-      chunkFilename: "app/[id].chunk.js",
+      path: path.resolve(__dirname, '..', 'build'),
+      filename: 'app/[name].bundle.js',
+      chunkFilename: 'app/[id].chunk.js',
     },
     devServer: {
-      publicPath: "/",
       historyApiFallback: true,
-      stats: options.stats,
       hot: true,
-      inline: true,
-      watchContentBase: true,
-      contentBase: "./build/index.html",
       proxy: [
         {
-          context: ["/authorize"],
-          target: localTarget("auth") ? targets.auth.local : targets.auth.dev,
+          context: ['/authorize'],
+          target: localTarget('auth') ? targets.auth.local : targets.auth.dev,
           secure: false,
           headers: {
-            "Access-Control-Allow-Origin": "*",
+            'Access-Control-Allow-Origin': '*',
           },
         },
       ],
-      watchOptions: {
-        ignored: /node_modules/,
-      },
     },
     plugins: [
       new SimpleProgressWebpackPlugin({
-        format: options.stats === "minimal" ? "compact" : "expanded",
+        format: options.stats === 'minimal' ? 'compact' : 'expanded',
       }),
-      new FriendlyErrorsWebpackPlugin(),
       new BrowserSyncPlugin(
         {
-          host: "127.0.0.1",
-          open: "external",
+          host: '127.0.0.1',
+          open: 'external',
           port: 9001,
           proxy: {
-            target: "http://127.0.0.1:9060",
+            target: 'http://127.0.0.1:8080',
             ws: true,
           },
         },
@@ -80,10 +65,10 @@ module.exports = (options) =>
       ),
       new webpack.HotModuleReplacementPlugin(),
       new writeFilePlugin(),
-      new webpack.WatchIgnorePlugin([path.resolve(__dirname, "test")]),
+      new webpack.WatchIgnorePlugin({ paths: [path.resolve(__dirname, 'test')] }),
       new WebpackNotifierPlugin({
-        title: "Portfolio",
-        contentImage: path.join(__dirname, "logo.png"),
+        title: 'Portfolio',
+        contentImage: path.join(__dirname, 'logo.png'),
       }),
     ],
   });

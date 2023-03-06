@@ -1,6 +1,6 @@
 // External Depedencies
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 // Component Dependencies
 import { EmptyContainer } from 'app/components/EmptyContainer';

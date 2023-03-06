@@ -1,7 +1,7 @@
 // External Dependencies
 import React from 'react';
-import { CircularProgress, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { CircularProgress, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 // Create the styles for the Load Screen
 const useStyles = makeStyles(theme => ({

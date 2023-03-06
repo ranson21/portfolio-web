@@ -1,6 +1,6 @@
 // External Dependencies
 import React from 'react';
-import { Typography, Link } from '@material-ui/core';
+import { Typography, Link } from '@mui/material';
 
 export const Copyright = () => {
   return (
@@ -10,7 +10,6 @@ export const Copyright = () => {
         Abby Ranson
       </Link>{' '}
       {new Date().getFullYear()}
-      {'.'}
     </Typography>
   );
 };

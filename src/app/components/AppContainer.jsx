@@ -1,13 +1,13 @@
 // External Dependencies
 import React from 'react';
-import { CssBaseline } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Toolbar, Grid } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 // Component Dependencies
 import { AppBar } from 'app/components/AppBar';
+import { Copyright } from 'app/components/Copyright';
 import { ErrorBoundary } from 'app/components/ErrorBoundary';
 import { appBarHeight } from 'app/styles';
-import { ThemeWrapper } from 'app/components/ThemeWrapper';
 
 // Create the styles for the private layout
 export const useStyles = makeStyles(theme => ({
@@ -18,6 +18,14 @@ export const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     height: `calc(100vh - ${appBarHeight}px)`,
+  },
+  footer: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    [theme.breakpoints.down('sm')]: {
+      bottom: 'auto',
+    },
   },
 }));
 
@@ -30,19 +38,25 @@ export const AppContainer = ({ Screen, ...props }) => {
   const classes = useStyles();
 
   return (
-    <ThemeWrapper className={classes.root}>
-      <CssBaseline />
-      {/* Top Level */}
+    <React.Fragment>
       <ErrorBoundary component="AppBar">
         <AppBar {...props} />
       </ErrorBoundary>
-
-      {/* Main Body */}
-      <main className={classes.content}>
-        <ErrorBoundary component="Screen">
-          <Screen {...props} />
-        </ErrorBoundary>
-      </main>
-    </ThemeWrapper>
+      <Toolbar />
+      <ErrorBoundary component="Screen">
+        <Screen {...props} />
+      </ErrorBoundary>
+      <ErrorBoundary component="Footer">
+        <footer className={classes.footer}>
+          <Grid container justifyContent="flex-end" spacing={2}>
+            <Grid item sx={{ marginRight: 3, marginBottom: 3 }}>
+              <Copyright />
+            </Grid>
+          </Grid>
+        </footer>
+      </ErrorBoundary>
+    </React.Fragment>
   );
 };
+
+export default AppContainer;

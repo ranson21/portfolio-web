@@ -1,16 +1,13 @@
 // External Dependencies
 import React from 'react';
-import { Link, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Link, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 // Create the Logo Styles
 export const useStyles = makeStyles(theme => ({
-  logo: {
-    color: theme.palette.type === 'dark' ? theme.palette.primary.main : 'white',
-    display: 'flex',
-    flex: 1,
+  image: {
+    height: 32,
   },
-  label: { padding: '0 15px', whiteSpace: 'nowrap' },
 }));
 
 /**
@@ -22,8 +19,8 @@ export default () => {
   const classes = useStyles();
 
   return (
-    <Link className={classes.logo} href="#/home" underline="none">
-      <Typography className={classes.label} variant="h6" color="inherit"></Typography>
+    <Link href="/" underline="none">
+      <img src={'img/logo.svg'} className={classes.image} />
     </Link>
   );
 };

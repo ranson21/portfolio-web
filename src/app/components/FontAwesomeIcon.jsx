@@ -1,6 +1,6 @@
 // External Dependencies
 import React from 'react';
-import { Icon } from '@material-ui/core';
+import { Icon } from '@mui/material';
 import { loadCSS } from 'fg-loadcss';
 
 /**

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Typography, Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Typography, Grid } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 // Create the styles for this component
 const useStyles = makeStyles(() => ({
@@ -20,7 +20,7 @@ export const EmptyContainer = ({ image, label, height, width }) => {
   const classes = useStyles();
 
   return (
-    <Grid container className={classes.container} justify="center" alignItems="center">
+    <Grid container className={classes.container} justifyContent="center" alignItems="center">
       <div className={classes.emptyList}>
         <img width={width} height={height} src={image} />
         <Typography align="center" variant="h5" className={classes.emptyListText}>

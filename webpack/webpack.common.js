@@ -2,6 +2,7 @@
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
@@ -32,6 +33,9 @@ module.exports = options => ({
         loader: 'babel-loader',
         exclude: /node_modules/,
         include: /src/,
+        options: {
+          plugins: ['react-refresh/babel'],
+        },
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
@@ -57,17 +61,21 @@ module.exports = options => ({
     children: false,
   },
   plugins: [
+    new ReactRefreshWebpackPlugin(),
     new CleanWebpackPlugin(),
-    new webpack.EnvironmentPlugin(['NODE_ENV', '_SERVER', '_AURORA_URL', 'API_KEY', 'SENDER_ID', 'APP_ID', 'PROJECT_ID', '_RELEASE']),
-    new CopyWebpackPlugin([
-      { from: './src/web/img', to: 'img' },
-      { from: './src/web/favicon.ico', to: 'favicon.ico' },
-      { from: './src/web/manifest.webapp', to: 'manifest.webapp' },
-      { from: './src/web/robots.txt', to: 'robots.txt' },
-    ]),
+    // new webpack.EnvironmentPlugin(['NODE_ENV', '_SERVER', '_AURORA_URL', 'API_KEY', 'SENDER_ID', 'APP_ID', 'PROJECT_ID', '_RELEASE']),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: './src/web/img', to: 'img' },
+        { from: './src/web/favicon.ico', to: 'favicon.ico' },
+        { from: './src/web/manifest.webapp', to: 'manifest.webapp' },
+        { from: './src/web/robots.txt', to: 'robots.txt' },
+      ],
+    }),
     new HtmlWebpackPlugin({
+      title: 'Abby Ranson',
       template: './src/web/index.html',
-      chunksSortMode: 'dependency',
+      chunksSortMode: 'auto',
       inject: 'body',
     }),
   ],

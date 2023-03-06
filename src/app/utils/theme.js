@@ -1,10 +1,10 @@
 // External Dependencies
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme, adaptV4Theme } from '@mui/material/styles';
 
 /**
  * Method to set the application theme
  */
-export const theme = createTheme({
+export const theme = createTheme(adaptV4Theme({
   themeName: 'React Firebase Theme',
   breakpoints: {
     keys: ['xs', 'sm', 'md', 'lg', 'xl'],
@@ -31,4 +31,4 @@ export const theme = createTheme({
       contrastText: '#fff',
     },
   },
-});
+}));
