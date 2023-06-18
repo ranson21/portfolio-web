@@ -1,6 +1,6 @@
 // External Dependencies
 import React from 'react';
-import { Link, Typography } from '@mui/material';
+import { Button, Link, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 // Create the Logo Styles
@@ -19,7 +19,7 @@ export default () => {
   const classes = useStyles();
 
   return (
-    <Link href="/" underline="none">
+    <Link href="#" sx={{ zIndex: 100 }}>
       <img src={'img/logo.svg'} className={classes.image} />
     </Link>
   );

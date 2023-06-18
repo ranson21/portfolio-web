@@ -2,14 +2,16 @@ import React from 'react';
 import { Typography, Grid } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
+import { appBarHeight } from 'app/styles';
+
 // Create the styles for this component
 const useStyles = makeStyles(() => ({
   container: {
-    height: `calc(100% - 53px)`,
+    height: `calc(100svh - ${appBarHeight}px)`,
   },
   emptyList: { display: 'flex', flexDirection: 'column' },
   emptyListText: { marginTop: 25 },
-  emptyListImage: { height: 300 },
+  emptyListImage: { height: 500 },
 }));
 
 /**
@@ -32,5 +34,5 @@ export const EmptyContainer = ({ image, label, height, width }) => {
 };
 
 EmptyContainer.defaultProps = {
-  height: 300,
+  height: 500,
 };

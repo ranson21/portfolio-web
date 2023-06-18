@@ -17,9 +17,10 @@ export const useStyles = makeStyles(theme => ({
   },
   content: {
     flexGrow: 1,
-    height: `calc(100vh - ${appBarHeight}px)`,
+    height: `calc(100svh - ${appBarHeight}px)`,
   },
   footer: {
+    height: 64,
     width: '100%',
     position: 'absolute',
     bottom: 0,

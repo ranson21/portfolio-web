@@ -132,6 +132,7 @@ export const AppBar = props => {
               marginLeft: { sm: '0', xs: 12 },
               position: 'absolute',
               width: '100%',
+              zIndex: -1,
             }}
           >
             <Typography sx={{ fontSize: { xs: 18, md: 28 } }} fontFamily="Satisfy, cursive">

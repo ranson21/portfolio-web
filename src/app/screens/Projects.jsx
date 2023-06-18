@@ -6,6 +6,7 @@ import { ArrowForward } from '@mui/icons-material';
 
 // Style dependencies
 import { appBarHeight } from 'app/styles';
+import { EmptyContainer } from 'app/components/EmptyContainer';
 
 // Create the dashboard screen styles
 export const useStyles = makeStyles(theme => ({}));
@@ -16,7 +17,7 @@ export const useStyles = makeStyles(theme => ({}));
 export const Projects = props => {
   const classes = useStyles();
 
-  return <Grid container></Grid>;
+  return <EmptyContainer image="img/under_construction.png" />;
 };
 
 export default Projects;

@@ -1,8 +1,8 @@
 // External Depedencies
 import React from 'react';
-import { Container, Toolbar, Box, Grid, Typography, Button } from '@mui/material';
+import { Container, Toolbar, Box, Grid, Typography, Button, IconButton } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { ArrowForward } from '@mui/icons-material';
+import { ArrowForward, GiteOutlined, GitHub, LinkedIn } from '@mui/icons-material';
 
 // Style dependencies
 import { appBarHeight } from 'app/styles';
@@ -44,6 +44,30 @@ export const Home = props => {
 
   return (
     <Container>
+      <Box
+        sx={{
+          display: { md: 'flex', xs: 'none' },
+          alignItems: 'center',
+          position: 'absolute',
+          height: '100%',
+          width: '64px',
+          top: 0,
+          left: 0,
+        }}
+      >
+        <Grid container justifyContent="center" spacing={1}>
+          <Grid item>
+            <IconButton href="https://www.linkedin.com/in/abbyranson/" target="_blank">
+              <LinkedIn color="primary" />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton href="https://github.com/ranson21" target="_blank">
+              <GitHub />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Box>
       <Grid container justifyContent="center" alignItems="center" classes={{ root: classes.root }}>
         <Grid item classes={{ root: classes.intro }}>
           <Container>
@@ -72,7 +96,7 @@ export const Home = props => {
                 </blockquote>
               </Grid>
               <Grid item xs={12}>
-                <Button endIcon={<ArrowForward />} variant="outlined">
+                <Button endIcon={<ArrowForward />} variant="outlined" href="#/about">
                   Get to Know Me
                 </Button>
               </Grid>
@@ -84,10 +108,6 @@ export const Home = props => {
             <img src={'img/girl_laptop_outdoors.png'} className={classes.image} />
           </Grid>
         </Grid>
-      </Grid>
-
-      <Grid container spacing={2} justifyContent="center" alignItems="center" classes={{ root: classes.hero }}>
-        <Grid item xs={12}></Grid>
       </Grid>
     </Container>
   );
