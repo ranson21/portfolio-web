@@ -2,7 +2,6 @@
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
@@ -34,7 +33,7 @@ module.exports = options => ({
         exclude: /node_modules/,
         include: /src/,
         options: {
-          plugins: ['react-refresh/babel'],
+          plugins: options.env !== 'production' ? ['react-refresh/babel'] : [],
         },
       },
       {
@@ -61,7 +60,6 @@ module.exports = options => ({
     children: false,
   },
   plugins: [
-    new ReactRefreshWebpackPlugin(),
     new CleanWebpackPlugin(),
     // new webpack.EnvironmentPlugin(['NODE_ENV', '_SERVER', '_AURORA_URL', 'API_KEY', 'SENDER_ID', 'APP_ID', 'PROJECT_ID', '_RELEASE']),
     new CopyWebpackPlugin({

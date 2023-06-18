@@ -1,8 +1,8 @@
 // External Dependencies
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import { Grid, AppBar as MAppBar, Toolbar, IconButton, Box, Menu, MenuItem, Typography, useTheme, Button, Link } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Grid, AppBar as MAppBar, Toolbar, IconButton, Box, Menu, MenuItem, Typography, Button, Link } from '@mui/material';
+import { makeStyles, useTheme } from '@mui/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 
 // Component Dependencies

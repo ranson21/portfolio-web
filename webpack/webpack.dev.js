@@ -5,6 +5,7 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const path = require('path');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const commonConfig = require('./webpack.common.js');
 
@@ -46,6 +47,7 @@ module.exports = options =>
       ],
     },
     plugins: [
+      new ReactRefreshWebpackPlugin(),
       new SimpleProgressWebpackPlugin({
         format: options.stats === 'minimal' ? 'compact' : 'expanded',
       }),
