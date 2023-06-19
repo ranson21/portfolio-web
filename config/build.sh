@@ -22,7 +22,7 @@ if [ -d "./build" ] && [ "$1" == "-p" ]; then
   zip release.zip build/**/*
 
   # Create the upload URL with the appropriate tags
-  echo "Creating release URL $data"
+  echo "Creating release URL"
   upload_url=$(curl -L -X POST -d "$data" "https://$owner:$GITHUB_TOKEN@api.github.com/repos/$owner/$repo/releases" | jq -r '.upload_url')
   upload_url="${upload_url%\{*}"
 

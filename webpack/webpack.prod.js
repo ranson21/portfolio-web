@@ -14,9 +14,6 @@ module.exports = options =>
     devtool: 'source-map',
     entry: {
       main: './src/app/index.jsx',
-      // lodash: 'lodash',
-      // mui: ['@mui/material', '@mui/icons-material'],
-      // react: ['react', 'react-dom'],
     },
     output: {
       path: path.resolve(__dirname, '..', 'build'),
@@ -34,20 +31,6 @@ module.exports = options =>
             chunks: 'initial',
             minChunks: 2,
           },
-          // commons: {
-          //   reuseExistingChunk: true,
-          //   test: /[\\/]node_modules[\\/]/,
-          //   // cacheGroupKey here is `commons` as the key of the cacheGroup
-          //   name(module, chunks, cacheGroupKey) {
-          //     const moduleFileName = module
-          //       .identifier()
-          //       .split('/')
-          //       .reduceRight(item => item);
-          //     const allChunksNames = chunks.map(item => item.name).join('~');
-          //     return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
-          //   },
-          //   chunks: 'all',
-          // },
           react: {
             test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
             name: 'react',
