@@ -1,15 +1,13 @@
 // External Depedencies
 import React from 'react';
 import { Container, Toolbar, Box, Grid, Typography, Button } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import { ArrowForward } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
 
 // Style dependencies
-import { appBarHeight } from 'app/styles';
-import { EmptyContainer } from 'app/components/EmptyContainer';
+import { EmptyContainer } from 'app/components';
 
 // Create the dashboard screen styles
-export const useStyles = makeStyles(theme => ({}));
+const useStyles = makeStyles(theme => ({}));
 
 /**
  * Dashboard Screen Component

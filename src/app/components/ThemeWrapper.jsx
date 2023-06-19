@@ -1,8 +1,7 @@
 // External Dependencies
 import React from 'react';
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useMediaQuery, CssBaseline } from '@mui/material';
 
 /**
  * Method to wrap the application with a theme

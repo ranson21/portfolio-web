@@ -17,7 +17,7 @@ echo "Building new release..."
 NODE_ENV=production webpack --config webpack/webpack.prod.js
 
 # Compress the asset for release if the build was successful
-if [ -d "./build" ]; then
+if [ -d "./build" ] && [ "$1" == "-p" ]; then
   echo "Compressing the generated assets..."
   zip release.zip build/**/*
 
@@ -33,6 +33,8 @@ if [ -d "./build" ]; then
   # Clean up
   rm -rf release.zip
   rm -rf build/
-else
+elif [ ! -d "./build" ]; then
   printf "\n\nBuild failed..."
+else
+  printf "\n\nBuild successful, skipping publish"
 fi

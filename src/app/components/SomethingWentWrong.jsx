@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@mui/material';
 
 // Component Dependencies
-import { EmptyContainer } from 'app/components/EmptyContainer';
+import { EmptyContainer } from 'app/components';
 
 /**
  * Error Handling Component Component

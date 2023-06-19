@@ -4,7 +4,6 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Dashboard } from '@mui/icons-material';
 
 // Component Dependencies
-import { LoadScreen } from 'app/screens/Loading';
 
 // Top-Level routes
 export const ROUTES = [

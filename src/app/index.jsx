@@ -1,9 +1,8 @@
 /**
  * @module App
  */
-import React, { Suspense } from 'react';
+import React from 'react';
 import { render } from 'react-dom';
-import { LoadScreen } from 'app/screens/Loading';
 
 import App from 'app/router';
 import { ThemeWrapper } from 'app/components/ThemeWrapper';

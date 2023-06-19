@@ -14,7 +14,9 @@ module.exports = options =>
     devtool: 'source-map',
     entry: {
       main: './src/app/index.jsx',
-      vendors: ['react'],
+      // lodash: 'lodash',
+      // mui: ['@mui/material', '@mui/icons-material'],
+      // react: ['react', 'react-dom'],
     },
     output: {
       path: path.resolve(__dirname, '..', 'build'),
@@ -27,29 +29,34 @@ module.exports = options =>
         minSize: 0,
         chunks: 'all',
         cacheGroups: {
-          vendors: {
-            test: /[\\/]node_modules[\\/]/,
-            chunks: 'all',
-            priority: -20,
-          },
-          // common chunk
-          default: {
-            name: 'common',
+          commons: {
+            name: 'commons',
+            chunks: 'initial',
             minChunks: 2,
-            chunks: 'async',
-            priority: -10,
-            reuseExistingChunk: true,
-            enforce: true,
+          },
+          // commons: {
+          //   reuseExistingChunk: true,
+          //   test: /[\\/]node_modules[\\/]/,
+          //   // cacheGroupKey here is `commons` as the key of the cacheGroup
+          //   name(module, chunks, cacheGroupKey) {
+          //     const moduleFileName = module
+          //       .identifier()
+          //       .split('/')
+          //       .reduceRight(item => item);
+          //     const allChunksNames = chunks.map(item => item.name).join('~');
+          //     return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+          //   },
+          //   chunks: 'all',
+          // },
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react',
+            chunks: 'all',
           },
         },
       },
       nodeEnv: 'production',
-      // flagIncludedChunks: true,
-      // sideEffects: false,
-      // usedExports: true,
-      concatenateModules: true,
-      // emitOnErrors: false,
-      // checkWasmTypes: true,
+      flagIncludedChunks: true,
       minimize: true,
       minimizer: [
         new TerserPlugin({
@@ -70,7 +77,6 @@ module.exports = options =>
         filename: '[path][name].gz[query]',
       }),
       new webpack.optimize.AggressiveMergingPlugin(),
-      // new webpack.optimize.ModuleConcatenationPlugin(),
       new webpack.IgnorePlugin({
         checkResource(resource, context) {
           const isLocaleFromMomentImport = /^\.\/locale$/.test(resource) && /moment$/.test(context);

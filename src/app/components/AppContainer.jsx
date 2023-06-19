@@ -1,16 +1,14 @@
 // External Dependencies
 import React from 'react';
 import { Toolbar, Grid } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from '@mui/styles';
 
 // Component Dependencies
-import { AppBar } from 'app/components/AppBar';
-import { Copyright } from 'app/components/Copyright';
-import { ErrorBoundary } from 'app/components/ErrorBoundary';
+import { AppBar, Copyright, ErrorBoundary } from 'app/components';
 import { appBarHeight } from 'app/styles';
 
 // Create the styles for the private layout
-export const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
     backgroundColor: theme.palette.background.default,

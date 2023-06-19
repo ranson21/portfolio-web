@@ -1,17 +1,28 @@
 // External Dependencies
 import React from 'react';
 import clsx from 'clsx';
-import { Grid, AppBar as MAppBar, Toolbar, IconButton, Box, Menu, MenuItem, Typography, Button, Link } from '@mui/material';
+import {
+  useScrollTrigger,
+  Grid,
+  AppBar as MAppBar,
+  Toolbar,
+  IconButton,
+  Box,
+  Menu,
+  MenuItem,
+  Typography,
+  Button,
+  Link,
+} from '@mui/material';
 import { makeStyles, useTheme } from '@mui/styles';
-import useScrollTrigger from '@mui/material/useScrollTrigger';
 
 // Component Dependencies
-import Logo from 'app/components/Logo';
+import { Logo } from 'app/components';
 import { Send, Menu as MenuIcon } from '@mui/icons-material';
 import { useLocation } from 'react-router-dom';
 
 // Create the styles for the AppBar component
-export const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
   },

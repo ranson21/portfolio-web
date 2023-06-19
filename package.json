@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm test",
     "setup": "source setup.sh",
-    "analyze": "webpack -p --mode=production --config webpack/webpack.prod.js --profile --json > stats.json && webpack-bundle-analyzer stats.json build",
+    "analyze": "webpack --mode=production --config webpack/webpack.prod.js --profile --json > stats.json && webpack-bundle-analyzer stats.json build",
     "start": "webpack serve --hot --mode=development --config webpack/webpack.dev.js",
     "build": "NODE_ENV=production ./config/build.sh",
     "webpack:dev": "npm run webpack-dev-server -- --config webpack/webpack.dev.js --port=9060 --env.stats=minimal",
@@ -57,5 +57,10 @@
     "webpack-merge": "^5.8.0",
     "webpack-notifier": "^1.15.0",
     "write-file-webpack-plugin": "^4.5.1"
+  },
+  "overrides": {
+    "babel-plugin-lodash": {
+      "@babel/types": "~7.20.0"
+    }
   }
 }
