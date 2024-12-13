@@ -114,7 +114,7 @@ export const AppBar = props => {
               <Grid item>
                 <Button
                   download
-                  href="docs/2024-04-01-resume.pdf"
+                  href="docs/2024-12-01-resume.pdf"
                   size="small"
                   variant="contained"
                   color="secondary"

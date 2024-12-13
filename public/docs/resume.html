@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: 'Calibri', sans-serif;
+    max-width: 8.5in;
+    margin: 0.75in;
+    color: #333;
+    line-height: 1.3;
+  }
+  
+  @media print {
+    body {
+      margin: 0.75in;
+    }
+    
+    .page-break {
+      page-break-before: always;
+    }
+    
+    @page {
+      margin: 0.75in;
+      size: letter;
+    }
+  }
+  
+  header {
+    text-align: center;
+    border-bottom: 2px solid #2C275D;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+  }
+  
+  h1 {
+    color: #2C275D;
+    margin: 0;
+    font-size: 32px;
+    letter-spacing: 1px;
+  }
+  
+  .title {
+    font-size: 20px;
+    color: #2C275D;
+    margin: 8px 0;
+    opacity: 0.9;
+  }
+  
+  .contact {
+    font-size: 15px;
+    color: #4a5568;
+    margin-top: 10px;
+  }
+  
+  .contact a {
+    color: #2C275D;
+    text-decoration: none;
+  }
+  
+  h2 {
+    color: #2C275D;
+    font-size: 18px;
+    border-bottom: 1px solid #2C275D;
+    margin: 25px 0 15px 0;
+    padding-bottom: 5px;
+    letter-spacing: 0.5px;
+  }
+
+  .skills-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 20px 0 30px 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .skill-category {
+    margin-bottom: 0;
+  }
+
+  .skill-header {
+    color: #2C275D;
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  .skill-bar-container {
+    position: relative;
+    background: #f0f0f0;
+    height: 20px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .skill-bar {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background: #2C275D;
+    border-radius: 10px;
+    color: white;
+    padding-left: 10px;
+    font-size: 12px;
+  }
+
+  .skill-details {
+    font-size: 12px;
+    color: #666;
+    margin: 5px 0 15px 0;
+    line-height: 1.3;
+  }
+  
+  .experience {
+    margin-bottom: 22px;
+    padding-bottom: 5px;
+    break-inside: avoid;
+  }
+  
+  .job-title {
+    font-weight: bold;
+    color: #2d3748;
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .company {
+    font-weight: bold;
+    color: #2C275D;
+    margin: 0;
+    font-size: 17px;
+    margin-bottom: 3px;
+  }
+  
+  .duration {
+    color: #4a5568;
+    font-style: italic;
+    font-size: 14px;
+    margin: 4px 0;
+  }
+  
+  .tech-stack {
+    font-style: italic;
+    color: #4a5568;
+    font-size: 14px;
+    margin: 4px 0;
+  }
+  
+  ul {
+    margin: 8px 0;
+    padding-left: 25px;
+  }
+  
+  li {
+    margin: 6px 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .two-column {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 30px;
+    margin-top: 15px;
+  }
+  
+  .summary {
+    font-size: 15px;
+    color: #4a5568;
+    margin: 15px 0 25px 0;
+    text-align: justify;
+    line-height: 1.4;
+  }
+  
+  .education-cert {
+    margin-top: 15px;
+  }
+  
+  .education-cert div {
+    margin-bottom: 5px;
+    line-height: 1.4;
+  }
+</style>
+</head>
+  <header>
+    <h1>ABBY RANSON</h1>
+    <div class="title">Software Engineer</div>
+    <div class="contact">
+      <a href="http://linkedin.com/in/abbyranson">linkedin.com/in/abbyranson</a> •
+      <a href="https://github.com/ranson21">github.com/ranson21</a> •
+      202-740-2370 • abby@abbyranson.com
+    </div>
+  </header>
+
+  <div class="summary">
+    Full Stack Software Engineer with 8 years of experience specializing in cloud-native applications, microservices architecture, and modern web development frameworks. Proven track record in optimizing application performance and leading development teams.
+  </div>
+
+  <h2>TECHNICAL EXPERTISE</h2>
+  <div class="skills-container">
+    <div class="skill-category">
+      <div class="skill-header">Frontend Development</div>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 95%">UI/UX Development</div>
+      </div>
+      <div class="skill-details">
+        JavaScript (ES5+), React/React Native, Angular, Material Design, etc.
+      </div>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 90%">Frontend Architecture</div>
+      </div>
+      <div class="skill-details">
+        State Management, Component Design, Performance, etc.
+      </div>
+    </div>
+
+    <div class="skill-category">
+      <div class="skill-header">Backend Development</div>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 92%">API Development</div>
+      </div>
+      <div class="skill-details">
+        Golang, Node.js, Ruby, Python, GraphQL, etc.
+      </div>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 88%">Database & Storage</div>
+      </div>
+      <div class="skill-details">
+        PostgreSQL, MongoDB, DynamoDB, Redis, etc.
+      </div>
+    </div>
+
+    <div class="skill-category">
+      <div class="skill-header">DevOps & Infrastructure</div>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 85%">Cloud Services</div>
+      </div>
+      <div class="skill-details">
+        AWS, Azure, GCP, Docker, Kubernetes, etc.
+      </div>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 82%">CI/CD & Automation</div>
+      </div>
+      <div class="skill-details">
+        Jenkins, CircleCI, GitHub Actions, IaC, etc.
+      </div>
+    </div>
+  </div>
+
+  <h2>PROFESSIONAL EXPERIENCE</h2>
+
+  <div class="experience">
+    <div class="company">Sky Solutions LLC</div>
+    <div class="job-title">Software Engineer (UCM)</div>
+    <div class="duration">September 2024 – Present</div>
+    <div class="tech-stack">Stack: Java/Angular | Platform: AWS | Business Area: Government/Legal</div>
+    <ul>
+      <li>Orchestrated critical version upgrade initiative across three Angular versions, achieving zero downtime migration while maintaining 100% feature parity and system stability</li>
+      <li>Engineered and implemented comprehensive local development environment, resulting in 40% improvement in developer productivity and deployment efficiency</li>
+      <li>Instituted systematic collaboration framework with design team, successfully implementing enterprise-wide design system that enhanced UI consistency across multiple applications</li>
+      <li>Revolutionized release management processes through implementation of automated CI/CD workflows, reducing deployment time by 60% and eliminating manual errors</li>
+    </ul>
+  </div>
+  
+  <div class="experience">
+    <div class="company">TISTA Science & Technologies</div>
+    <div class="job-title">Software Engineer (UCM)</div>
+    <div class="duration">February 2023 – September 2024</div>
+    <div class="tech-stack">Stack: Java/Angular | Platform: AWS | Business Area: Government/Legal</div>
+    <ul>
+      <li>Engineered sophisticated solutions for complex frontend architectural challenges</li>
+      <li>Architected and implemented modular AngularJS component library</li>
+    </ul>
+  </div>
+
+  <div class="experience">
+    <div class="job-title">Software Engineer (CTO Team)</div>
+    <div class="duration">January 2022 – February 2023</div>
+    <div class="tech-stack">Stack: NodeJS+Go/React | Platform: AWS | Business Area: Company IDP</div>
+    <ul>
+      <li>Spearheaded development of enterprise-grade Integrated Development Platform (IDP)</li>
+      <li>Engineered robust CLI tooling that streamlined developer workflows</li>
+      <li>Designed and implemented comprehensive IoT device simulator and standardized Jenkins pipeline library</li>
+    </ul>
+  </div>
+
+  <div class="experience">
+    <div class="job-title">Software Engineer (Caseflow)</div>
+    <div class="duration">March 2020 – January 2022</div>
+    <div class="tech-stack">Stack: React on Rails | Platform: AWS | Business Area: Government/Legal</div>
+    <ul>
+      <li>Engineered state management optimization resulting in 400% improvement in page load performance through sophisticated caching and lazy loading strategies</li>
+      <li>Orchestrated complete testing framework migration to Jest, implementing 300+ comprehensive test cases that increased code coverage to 95%</li>
+      <li>Pioneered implementation of automated accessibility testing, ensuring 100% compliance with Section 508 standards across all application features</li>
+    </ul>
+  </div>
+
+  <div class="experience">
+    <div class="company">NewWave Telecom & Technologies</div>
+    <div class="job-title">Sr. Full Stack Developer</div>
+    <div class="duration">June 2019 – March 2020</div>
+    <div class="tech-stack">Stack: NodeJS/React | Platform: Azure | Business Area: Government/Health</div>
+    <ul>
+      <li>Directed cross-functional team of 5 engineers in developing enterprise storage solution, delivering project 20% ahead of schedule</li>
+      <li>Architected and implemented private NPM registry infrastructure, including comprehensive design system package that reduced UI development time by 40%</li>
+      <li>Engineered scalable microservice transport utility for Azure Service Bus integration, processing over 1M messages daily with 99.99% reliability</li>
+    </ul>
+  </div>
+
+  <div class="page-break"></div>
+
+  <div class="experience">
+    <div class="job-title">Full Stack Developer</div>
+    <div class="duration">June 2018 – June 2019</div>
+    <div class="tech-stack">Stack: Various | Platform: Various | Business Area: Various</div>
+    <ul>
+      <li>Led development team in creating innovative application scaffolding tool POC</li>
+      <li>Designed and implemented enterprise-grade UI component library based on Material Design specifications</li>
+      <li>Architected secure document sharing platform for CMS portal, implementing robust encryption and access controls for sensitive data management</li>
+    </ul>
+  </div>
+
+  <div class="experience">
+    <div class="company">The American Society for Engineering Education (ASEE)</div>
+    <div class="job-title">Full Stack Developer</div>
+    <div class="duration">October 2016 – June 2018</div>
+    <div class="tech-stack">Stack: Ruby on Rails | Platform: On-Premise | Business Area: Education</div>
+    <ul>
+      <li>Orchestrated end-to-end application development lifecycle, successfully delivering multiple critical features while maintaining 99.9% uptime</li>
+      <li>Engineered and deployed modernized user interface for ASEE's primary website</li>
+      <li>Optimized legacy Ruby codebase through strategic refactoring</li>
+    </ul>
+  </div>
+
+  <div class="experience">
+    <div class="company">The Community Partnership for the Prevention of Homelessness (TCP)</div>
+    <div class="job-title">System Administrator</div>
+    <div class="duration">March 2014 – October 2016</div>
+    <ul>
+      <li>Developed sophisticated Excel automation solutions, reducing data analysis processing time by 75% and eliminating manual errors</li>
+      <li>Administered and optimized DC's Homelessness Management Information System (HMIS), ensuring 99.9% system availability for 50+ partner organizations</li>
+      <li>Engineered automated reporting system for HUD and CMS congressional reports, reducing report generation time by 60% while ensuring 100% accuracy</li>
+    </ul>
+  </div>
+
+  <h2>EDUCATION & CERTIFICATIONS</h2>
+  <div class="two-column education-cert">
+    <div>
+      <strong>ABA</strong>, Germanna Community College (2009 – 2012)
+    </div>
+    <div>
+      <div>Twilio Platform Certificate</div>
+      <div>Looker Certificate</div>
+      <div>NNG UX Certificate</div>
+    </div>
+  </div>
+</body>
+</html>
