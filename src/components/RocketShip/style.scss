@@ -1,0 +1,551 @@
+
+.rocket {
+  position: absolute;
+  left: 80%;
+  top: 60%;
+  z-index: 100;
+}
+
+@media only screen and (min-width: 2304px) {
+  .rocket {
+    transform: scale(2.0);
+    top: 65%;
+  }
+}
+
+@media only screen and (min-width: 2560px) {
+  .rocket {
+    transform: scale(2.4);
+    top: 70%;
+  }
+}
+
+@media only screen and (min-width: 2880px) {
+  .rocket {
+    transform: scale(2.8);
+    top: 70%;
+  }
+}
+
+$color_fuel: #d49459;
+$color_shell: #9d9e9d;
+
+.fuel {
+  display: block;
+  width: 44px;
+  height: 193px;
+  background: $color_fuel;
+  border-top-left-radius: 26px;
+  border-top-right-radius: 26px;
+  border-top: 10px solid #af7d4c;
+  border-left: 9px solid #af7d4c;
+  position: relative;
+}
+
+.fuel-bottom {
+  clip-path: polygon(0% 0%, 100% 0%, 75% 100%, 25% 100%);
+  display: block;
+  width: 44px + 9px;
+  height: 14px;
+  background: $color_fuel;
+  position: absolute;
+  bottom: -13px;
+  right: 0px;
+}
+
+.fuel-shell {
+  clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+  display: block;
+  width: 44px + 9px;
+  height: 26px;
+  background: $color_shell;
+  position: absolute;
+  bottom: -14px - 24px;
+  right: 0px;
+}
+
+.booster-shadow {
+  display: block;
+  width: 30px;
+  height: 204px;
+  background-color: #d1d4d4;
+  clip-path: polygon(
+    50% 0,
+    15% 10%,
+    15% 91%,
+    0% 100%,
+    100% 100%,
+    85% 91%,
+    85% 10%
+  );
+  margin-left: 3px;
+  z-index: 99;
+  margin-top: 40px;
+}
+
+.booster {
+  display: block;
+  width: 30px;
+  height: 204px;
+  background-color: #fff;
+  clip-path: polygon(
+    50% 0,
+    18% 10%,
+    18% 91%,
+    0% 100%,
+    100% 100%,
+    85% 91%,
+    85% 10%
+  );
+  position: absolute;
+  margin-left: 3px;
+  z-index: 999 !important;
+}
+
+.booster-line {
+  display: block;
+  width: 18px;
+  height: 1px;
+  display: block;
+  background: #c3c2c2;
+  position: absolute;
+  z-index: 1;
+  top: 59px;
+  right: 0;
+}
+
+.ship {
+  position: absolute;
+  padding-left: 56px;
+  margin-top: 25px;
+  top: 0px;
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  .ship_container {
+    width: 100%;
+    height: 100%;
+    position: relative !important;
+    display: block;
+  }
+
+  .body {
+    width: 34px;
+    height: 128px;
+    background: white;
+    display: block;
+    position: relative;
+    border-left: 2px solid #201f1f;
+  }
+
+  .tail {
+    clip-path: polygon(0 0, 85% 55%, 100% 89%, 0% 48%);
+    background: white;
+    width: 35px;
+    height: 60px;
+    display: block;
+    left: 33px;
+    bottom: -25px;
+    position: absolute;
+    z-index: 99;
+  }
+
+  .nose {
+    width: 21px;
+    height: 50px;
+    display: block;
+    background: red;
+    margin-left: 0px;
+    background: white;
+    margin-bottom: -2px;
+    overflow: hidden;
+    border-radius: 100% 200% 0% 0% / 200% 300% 0% 0%;
+    border-left: 15px solid #201f1f;
+    clip-path: polygon(0% 100%, 0% 0%, 60% 0%, 100% 71%, 100% 100%);
+    z-index: 9;
+  }
+  .nose::before {
+    display: block;
+    width: 25px;
+    height: 23px;
+    content: " ";
+    clip-path: polygon(75% 3%, 88% 21%, 94% 96%, 66% 94%);
+    background: #201f1f;
+    margin-top: 9px;
+    margin-left: -5px;
+    z-index: 99;
+    position: absolute;
+  }
+
+  .attachment {
+    height: 5px;
+    width: 8px;
+    display: block;
+    background: #a9a7a4;
+    position: absolute;
+    z-index: -1;
+
+    &.top {
+      bottom: 0px;
+      left: -5px;
+      margin-bottom: 141px;
+    }
+
+    &.middle {
+      bottom: 0px;
+      left: -5px;
+      margin-bottom: 84px;
+    }
+
+    &.bottom {
+      bottom: 0px;
+      left: -5px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .fuels {
+    position: relative;
+    left: 0px;
+    margin-left: -5px;
+    bottom: 0px;
+    width: 44px;
+  }
+  .fuel-shell {
+    &.large {
+      top: 0px;
+      left: 9px;
+      width: 25px;
+      height: 19px;
+      background: #959694;
+      z-index: 2;
+    }
+    &.left {
+      top: 0px;
+      left: 0px;
+      width: 18px;
+      height: 11px;
+      background: #9d9e9d;
+    }
+    &.right {
+      top: 0px;
+      right: 0px;
+      width: 18px;
+      height: 11px;
+      background: #9d9e9d;
+    }
+  }
+}
+
+.shadow::after {
+  display: block;
+  border-radius: 100%;
+  background: #9d9e9d;
+  content: " ";
+  height: 110%;
+  width: 100%;
+  margin-left: 80%;
+  transform: rotate(10deg);
+}
+
+.shadow {
+  display: block;
+  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+  width: 28%;
+  height: 110%;
+  background: #898a88;
+}
+
+.fire {
+  background: #f8e546;
+  clip-path: polygon(0% 0%, 4% 46%, 0% 100%, 100% 99%, 96% 49%, 100% 0%);
+  height: 280px;
+  width: 23px;
+  position: absolute;
+  margin-left: 5px;
+  margin-top: -10px;
+  z-index: -100;
+}
+
+.fire.right {
+  background: #ce7e3d;
+  z-index: -200;
+  margin-left: 13px;
+  margin-top: -17px;
+  width: 30px;
+  clip-path: polygon(0% 0%, 9% 53%, 0% 100%, 100% 100%, 81% 37%, 82% 0);
+  height: 290px;
+}
+
+.fire.left {
+  background: #e0b144;
+  z-index: -300;
+  margin-left: -4px;
+  margin-top: -17px;
+  width: 50px;
+  clip-path: polygon(0% 0%, 2% 53%, 0% 100%, 100% 100%, 81% 37%, 82% 0);
+  height: 290px;
+}
+
+.rocket-fire {
+  margin-left: -45px;
+  margin-top: 20px;
+}
+
+.rocket-fire .fire.left {
+  background: #ce7e3d;
+  margin-left: -11px;
+  width: 100px;
+  margin-top: -8px;
+  z-index: -9999;
+}
+
+.rocket-fire .fire.right {
+  background: #e0b144;
+  margin-left: 15px;
+  margin-top: -12px;
+}
+
+.rocket-fire .fire {
+  width: 28px;
+  margin-left: 2px;
+  margin-top: 5px;
+}
+
+@function timing($frames) {
+  $frame: 0.0416;
+  @return #{($frame * $frames)}s;
+}
+
+@function keyframe($frame_num, $animation_length) {
+  @return #{round(($frame_num / $animation_length) * 100%)};
+}
+
+.rocket {
+  animation: animation-rocket timing(48) infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes animation-rocket {
+  0% {
+    margin-top: 0px;
+  }
+  #{keyframe(24,48)} {
+    margin-top: 4px;
+  }
+  #{keyframe(48,48)} {
+    margin-top: 0px;
+  }
+}
+
+.fire.right {
+  animation: animation-ship-fire-right timing(48) infinite;
+  animation-timing-function: linear;
+}
+.rocket-fire .fire.right {
+  animation: animation-ship-fire-right timing(43) infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes animation-ship-fire-right {
+  0% {
+    background: #ce7e3d;
+  }
+  #{keyframe(20,48)} {
+    background: #bc7237;
+  }
+  #{keyframe(48,48)} {
+    background: #ce7e3d;
+  }
+}
+
+.fire {
+  animation: animation-ship-fire timing(48) infinite;
+  animation-timing-function: linear;
+}
+.rocket-fire .fire {
+  animation: animation-ship-fire timing(40) infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes animation-ship-fire {
+  0% {
+    background: #f8e546;
+  }
+  #{keyframe(25,48)} {
+    background: #f3e573;
+  }
+  #{keyframe(48,48)} {
+    background: #f8e546;
+  }
+}
+
+.fire.left {
+  animation: animation-ship-fire-left timing(48) infinite;
+  animation-timing-function: linear;
+}
+.rocket-fire .fire.left {
+  animation: animation-ship-fire-left timing(30) infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes animation-ship-fire-left {
+  0% {
+    background: #e0b144;
+  }
+  #{keyframe(25,48)} {
+    background: #bc7237;
+  }
+  #{keyframe(48,48)} {
+    background: #e0b144;
+  }
+}
+
+@keyframes animation-smoke-left-right {
+  0% {
+  }
+  #{keyframe(25,48)} {
+    margin-left: -6.3%;
+  }
+  #{keyframe(48,48)} {
+  }
+}
+
+@mixin smoke($size) {
+  width: $size;
+  height: $size;
+  border-radius: 100%;
+  position: relative;
+}
+
+.smoke {
+  margin-left: -30px;
+  z-index: -1;
+  position: absolute;
+
+  &.light > div {
+    background: #adadac;
+  }
+
+  &.dark > div {
+    background: #878887;
+  }
+
+  &.dark {
+    margin-left: -43px;
+    z-index: -2;
+  }
+
+  &-space {
+    padding-top: 36px;
+    background: transparent !important;
+  }
+
+  @for $i from 15 through 205 {
+    &--#{$i} {
+      @include smoke(#{$i}px);
+      animation: animation-smoke-left-right timing(random(400) + 200) infinite;
+      animation-delay: random(1000+100) + ms;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  @for $i from -100 through 100 {
+    .left_#{$i} {
+      margin-left: #{$i}px;
+    }
+  }
+
+  @for $i from 1 through 200 {
+    .top_#{$i} {
+      margin-top: -#{$i}px;
+    }
+  }
+}
+
+/* STARS are from the amazing pen: https://codepen.io/eva_trostlos/pen/akQoLN because I got lazy */
+@keyframes twinkle {
+  80% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+.star {
+  position: absolute;
+  right: 50%;
+  top: 10%;
+  z-index: -9;
+}
+.star li {
+  list-style: none;
+  position: absolute;
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    background-color: #fff;
+  }
+  &:before {
+    width: 10px;
+    height: 2px;
+    border-radius: 50%;
+  }
+  &:after {
+    height: 8px;
+    width: 2px;
+    left: 4px;
+    top: -3px;
+  }
+  &:first-child {
+    top: -30px;
+    left: -210px;
+    animation: twinkle 0.4s infinite;
+  }
+  &:nth-child(2) {
+    top: 0;
+    left: 60px;
+    animation: twinkle 0.5s infinite;
+    &:before {
+      height: 1px;
+      width: 5px;
+    }
+    &:after {
+      width: 1px;
+      height: 5px;
+      top: -2px;
+      left: 2px;
+    }
+  }
+  &:nth-child(3) {
+    left: 120px;
+    top: 220px;
+    animation: twinkle 1s infinite;
+  }
+  &:nth-child(4) {
+    left: -100px;
+    top: 200px;
+    animation: twinkle 0.5s ease infinite;
+  }
+  &:nth-child(5) {
+    left: 170px;
+    top: 100px;
+    animation: twinkle 0.4s ease infinite;
+  }
+  &:nth-child(6) {
+    top: 87px;
+    left: -79px;
+    animation: twinkle 0.2s infinite;
+    &:before {
+      height: 1px;
+      width: 5px;
+    }
+    &:after {
+      width: 1px;
+      height: 5px;
+      top: -2px;
+      left: 2px;
+    }
+  }
+}

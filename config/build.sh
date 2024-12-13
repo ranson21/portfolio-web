@@ -1,6 +1,6 @@
 #!/bin/bash
-repo="portfolio-web"
-owner="ranson21"
+repo="mystro-web"
+owner="RansonTesting"
 
 # Set the release variables
 release=$(jq -r '.version' <package.json)
@@ -19,7 +19,7 @@ NODE_ENV=production webpack --config webpack/webpack.prod.js
 # Compress the asset for release if the build was successful
 if [ -d "./build" ] && [ "$1" == "-p" ]; then
   echo "Compressing the generated assets..."
-  zip release.zip build/**/*
+  zip -r release.zip build
 
   # Create the upload URL with the appropriate tags
   echo "Creating release URL"

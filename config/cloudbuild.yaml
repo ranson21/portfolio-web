@@ -17,7 +17,7 @@ steps:
     args:
       - clone
       - --recurse-submodules
-      - git@github.com:ranson21/portfolio-web
+      - git@github.com:RansonTesting/mystro-web
     volumes:
       - name: 'ssh'
         path: /root/.ssh
