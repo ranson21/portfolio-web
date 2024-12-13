@@ -13,6 +13,37 @@ export default defineConfig({
       },
     }),
   ],
+
+  // Base URL configuration
+  base: '/', // Use '/' if serving from bucket root
+
+  build: {
+    // Generate static assets with hash for cache busting
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        // Chunk naming pattern for better caching
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
+      },
+    },
+
+    // Ensure source maps are disabled for production
+    sourcemap: false,
+
+    // Optimize chunks
+    chunkSizeWarningLimit: 1000,
+
+    // Generate manifest file for asset tracking
+    manifest: true,
+
+    // Optimize loading performance
+    reportCompressedSize: false,
+
+    // Clean output directory before build
+    emptyOutDir: true,
+  },
   server: {
     proxy: {},
   },

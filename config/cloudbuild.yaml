@@ -1,48 +1,105 @@
+# cloudbuild.yaml
 steps:
-  # - name: 'gcr.io/cloud-builders/git'
-  #   secretEnv: ['SSH_KEY']
-  #   entrypoint: 'bash'
-  #   args:
-  #     - -c
-  #     - |
-  #       echo "$$SSH_KEY" >> /root/.ssh/id_rsa
-  #       chmod 400 /root/.ssh/id_rsa
-  #       cp known_hosts.bitbucket /root/.ssh/known_hosts
-  #   volumes:
-  #     - name: 'ssh'
-  #       path: /root/.ssh
-
-  # Clone the repository
+  # Get latest version tag
   - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
     args:
-      - clone
-      - --recurse-submodules
-      - git@github.com:RansonTesting/mystro-web
-    volumes:
-      - name: 'ssh'
-        path: /root/.ssh
-  - name: node
+      - '-c'
+      - |
+        git fetch --tags
+        CURRENT_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0")
+        echo $CURRENT_VERSION > current_version.txt
+
+  # Bump version based on PR label
+  - name: 'python:3.9'
+    entrypoint: 'python'
+    args:
+      - '-c'
+      - |
+        import os
+        import re
+
+        def bump_version(current, bump_type):
+            # Remove 'v' prefix if present
+            current = current.lstrip('v')
+            major, minor, patch = map(int, current.split('.'))
+            
+            if bump_type == 'major':
+                major += 1
+                minor = 0
+                patch = 0
+            elif bump_type == 'minor':
+                minor += 1
+                patch = 0
+            else:  # patch
+                patch += 1
+                
+            return f"v{major}.{minor}.{patch}"
+
+        # Read current version
+        with open('current_version.txt', 'r') as f:
+            current_version = f.read().strip()
+
+        # Determine bump type from PR label
+        bump_type = os.getenv('_PR_TYPE', 'patch').lower()  # default to patch
+
+        # Calculate new version
+        new_version = bump_version(current_version, bump_type)
+
+        # Save new version
+        with open('new_version.txt', 'w') as f:
+            f.write(new_version)
+        print(f"Bumping version from {current_version} to {new_version}")
+
+  # Install dependencies
+  - name: 'node:18'
     entrypoint: npm
     args: ['install']
-  - name: node
-    secretEnv: ['API_KEY', 'SENDER_ID', 'APP_ID']
-    env:
-      - 'PROJECT_ID=$PROJECT_ID'
-      - '_RELEASE=$_RELEASE'
-      - '_SERVER=$_SERVER'
-      - '_AURORA_URL=$_AURORA_URL'
+
+  # Build the Vite app
+  - name: 'node:18'
     entrypoint: npm
     args: ['run', 'build']
-  # - name: gcr.io/cloud-builders/gsutil
-  #   args: ["-m", "rsync", "-r", "-c", "-d", "./build", "gs://$_SOURCE"]
+
+  # Create tar archive of dist directory
+  - name: 'ubuntu'
+    args: ['tar', '-czf', 'release.tar.gz', '-C', 'dist', '.']
+
+  # Create GitHub release with new version
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        NEW_VERSION=$(cat new_version.txt)
+        curl -X POST \
+          -H "Authorization: token $$GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          https://api.github.com/repos/ranson21/portfolio-web/releases \
+          -d '{
+            "tag_name": "'$${NEW_VERSION}'",
+            "name": "Release '$${NEW_VERSION}'",
+            "body": "Release version '$${NEW_VERSION}'",
+            "draft": false,
+            "prerelease": false
+          }' > release.json
+
+        # Extract release id
+        RELEASE_ID=$(cat release.json | jq .id)
+
+        # Upload asset
+        curl -X POST \
+          -H "Authorization: token $$GITHUB_TOKEN" \
+          -H "Content-Type: application/gzip" \
+          -H "Accept: application/vnd.github.v3+json" \
+          --data-binary @release.tar.gz \
+          "https://uploads.github.com/repos/ranson21/portfolio-web/releases/$${RELEASE_ID}/assets?name=release.tar.gz"
 
 availableSecrets:
   secretManager:
-    - versionName: projects/my-stro/secrets/bitbucket-build/versions/latest
-      env: 'SSH_KEY'
-    - versionName: projects/audit-signal-auditor/secrets/audit-signal-web-key/versions/latest
-      env: 'API_KEY'
-    - versionName: projects/audit-signal-auditor/secrets/audit-signal-web-sender-id/versions/latest
-      env: 'SENDER_ID'
-    - versionName: projects/audit-signal-auditor/secrets/audit-signal-web-app-id/versions/latest
-      env: 'APP_ID'
+    - versionName: projects/$PROJECT_ID/secrets/github_token/versions/latest
+      env: 'GITHUB_TOKEN'
+
+substitutions:
+  _PR_TYPE: 'patch' # Default to patch if no label is found

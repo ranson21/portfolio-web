@@ -6,6 +6,7 @@ log/*
 
 # Ignore the Build directory
 build/
+dist/
 
 # Ignore Analzyer Stats
 stats.json
