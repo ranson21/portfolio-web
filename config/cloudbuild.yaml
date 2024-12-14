@@ -7,15 +7,13 @@ steps:
     args:
       - '-c'
       - |
-        # Configure git to use the token for authentication
-        git config --global url."https://oauth2:$$GITHUB_TOKEN@github.com/".insteadOf "https://github.com/"
+        # Get the latest release using GitHub API
+        LATEST_TAG=$(curl -s -H "Authorization: token $$GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/repos/$$_REPO_OWNER/portfolio-web/releases/latest" | \
+          jq -r '.tag_name' || echo "v0.0.0")
 
-        # Now fetch all history and tags
-        git fetch --unshallow --tags origin || git fetch --tags origin
-
-        # Get the latest tag
-        LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v0.0.0")
-        echo "Latest version tag: $${LATEST_TAG}"
+        echo "Latest release tag: $${LATEST_TAG}"
         echo "$${LATEST_TAG}" > current_version.txt
 
   # Process PR info and determine version type
