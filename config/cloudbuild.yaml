@@ -233,13 +233,13 @@ steps:
 
         # Create a new branch
         BRANCH_NAME="update-portfolio-web-$${NEW_VERSION}"
-        git checkout -b $${BRANCH_NAME}
 
         # Update the submodule
         cd apps/web/portfolio
         git fetch origin
         git checkout master
         git pull
+        git checkout -b $${BRANCH_NAME}
         cd ../../..
 
         # Commit the changes
