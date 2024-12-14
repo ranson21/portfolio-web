@@ -30,7 +30,7 @@ steps:
         apt-get update && apt-get install -y curl jq
 
         if [ "$_IS_MERGE" = "true" ]; then
-            # Get the last merge commit message
+          # Get the last merge commit message
           MERGE_MSG=$(git log -1 --pretty=%B)
           # Extract PR number from merge commit message (format: Merge pull request #XX)
           PR_NUMBER=$(echo "$${MERGE_MSG}" | grep -o '#[0-9]\+' | tr -d '#')
@@ -38,13 +38,19 @@ steps:
           if [ ! -z "$${PR_NUMBER}" ]; then
             echo "Found PR number: $${PR_NUMBER}"
             
-            # Fetch PR labels using GitHub API
+            # Fetch PR labels using GitHub API (including closed PRs)
             curl -s -H "Authorization: token $$GITHUB_TOKEN" \
               -H "Accept: application/vnd.github.v3+json" \
-              "https://api.github.com/repos/$$_REPO_OWNER/portfolio-web/pulls/$${PR_NUMBER}" > pr_info.json
+              "https://api.github.com/repos/$_REPO_OWNER/portfolio-web/pulls/$${PR_NUMBER}?state=all" > pr_info.json
             
-            # Extract labels
-            LABELS=$(cat pr_info.json | jq -r '.labels[].name' | tr '\n' ',' | sed 's/,$//')
+            # Add debug output
+            echo "Debug: PR Info Response:"
+            cat pr_info.json
+            
+            # Extract labels with error handling
+            LABELS=$(cat pr_info.json | jq -r '.labels[]?.name // empty' | tr '\n' ',' | sed 's/,$//')
+            
+            echo "Debug: Found labels: $${LABELS}"
             
             if [[ $${LABELS} == *"major"* ]]; then
               echo "major" > version_type.txt
@@ -59,6 +65,8 @@ steps:
             echo "No PR number found, using timestamp"
             echo "timestamp" > version_type.txt
           fi
+          
+          echo "Debug: Final version type: $(cat version_type.txt)"
         else
           # Original PR label processing
           if [ -z "$_PR_TYPE" ] || [ "$_PR_TYPE" = "[]" ]; then
