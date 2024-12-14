@@ -7,10 +7,58 @@ steps:
       - '-c'
       - |
         git fetch --tags
-        CURRENT_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0")
-        echo $CURRENT_VERSION > current_version.txt
+        git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0" > current_version.txt
+        echo "$(cat current_version.txt)"
 
-  # Bump version based on PR label
+  # Process PR info and determine version type
+  - name: 'bash'
+    entrypoint: 'bash'
+    secretEnv: ['GITHUB_TOKEN']
+    args:
+      - '-c'
+      - |
+        if [ "$$_IS_MERGE" = "true" ]; then
+          # Extract PR number from commit message (Merge pull request #XX)
+          PR_NUMBER=$(echo "$_PR_TYPE" | grep -o '#[0-9]\+' | tr -d '#')
+          
+          if [ ! -z "$${PR_NUMBER}" ]; then
+            echo "Found PR number: $${PR_NUMBER}"
+            
+            # Fetch PR labels using GitHub API
+            curl -s -H "Authorization: token $$GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/$$_REPO_OWNER/portfolio-web/pulls/$${PR_NUMBER}" > pr_info.json
+            
+            # Extract labels
+            LABELS=$(cat pr_info.json | jq -r '.labels[].name' | tr '\n' ',' | sed 's/,$//')
+            
+            if [[ $${LABELS} == *"major"* ]]; then
+              echo "major" > version_type.txt
+            elif [[ $${LABELS} == *"minor"* ]]; then
+              echo "minor" > version_type.txt
+            elif [[ $${LABELS} == *"patch"* ]]; then
+              echo "patch" > version_type.txt
+            else
+              echo "timestamp" > version_type.txt
+            fi
+          else
+            echo "No PR number found, using timestamp"
+            echo "timestamp" > version_type.txt
+          fi
+        else
+          # Original PR label processing
+          if [ -z "$_PR_TYPE" ] || [ "$_PR_TYPE" = "[]" ]; then
+            echo "Debug: No labels found, using timestamp"
+            echo "timestamp" > version_type.txt
+          else
+            LABEL=$(echo "$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
+            echo "$${LABEL}" > version_type.txt
+          fi
+        fi
+
+        echo "Debug: Final version_type: $(cat version_type.txt)"
+
+  # Bump version based on PR label or use timestamp
   - name: 'python:3.9'
     entrypoint: 'python'
     args:
@@ -18,11 +66,22 @@ steps:
       - |
         import os
         import re
+        from datetime import datetime
 
         def bump_version(current, bump_type):
+            print(f"Debug: Processing bump_type: {bump_type}")
             # Remove 'v' prefix if present
             current = current.lstrip('v')
+            
+            # If PR_TYPE is timestamp, use current version with timestamp
+            if bump_type.lower().strip() == 'timestamp':
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                return f"v{current}-{timestamp}"
+            
+            # Regular semantic version bumping
             major, minor, patch = map(int, current.split('.'))
+            bump_type = bump_type.lower().strip()
+            print(f"Debug: Cleaned bump_type: {bump_type}")
             
             if bump_type == 'major':
                 major += 1
@@ -31,17 +90,24 @@ steps:
             elif bump_type == 'minor':
                 minor += 1
                 patch = 0
-            else:  # patch
+            elif bump_type == 'patch':
                 patch += 1
+            else:
+                print(f"Debug: Unrecognized bump_type, defaulting to timestamp")
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                return f"v{current}-{timestamp}"
                 
             return f"v{major}.{minor}.{patch}"
 
         # Read current version
         with open('current_version.txt', 'r') as f:
             current_version = f.read().strip()
+        print(f"Debug: Current version: {current_version}")
 
-        # Determine bump type from PR label
-        bump_type = os.getenv('_PR_TYPE', 'patch').lower()  # default to patch
+        # Read version type from file
+        with open('version_type.txt', 'r') as f:
+            bump_type = f.read().strip()
+        print(f"Debug: Read bump_type from file: {bump_type}")
 
         # Calculate new version
         new_version = bump_version(current_version, bump_type)
@@ -49,7 +115,14 @@ steps:
         # Save new version
         with open('new_version.txt', 'w') as f:
             f.write(new_version)
-        print(f"Bumping version from {current_version} to {new_version}")
+            
+        # Save whether this is a semantic version for later use
+        is_semantic = bump_type.lower().strip() in ['major', 'minor', 'patch']
+        with open('is_semantic.txt', 'w') as f:
+            f.write(str(is_semantic).lower())
+
+        print(f"Debug: is_semantic: {is_semantic}")
+        print(f"Version update: {current_version} -> {new_version}")
 
   # Install dependencies
   - name: 'node:18'
@@ -66,12 +139,22 @@ steps:
     args: ['tar', '-czf', 'release.tar.gz', '-C', 'dist', '.']
 
   # Create GitHub release with new version
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
+    secretEnv: ['GITHUB_TOKEN']
     args:
       - '-c'
       - |
         NEW_VERSION=$(cat new_version.txt)
+        IS_SEMANTIC=$(cat is_semantic.txt)
+
+        # Set draft status based on whether this is a semantic version
+        if [ "$${IS_SEMANTIC}" = "true" ]; then
+          DRAFT="false"
+        else
+          DRAFT="true"
+        fi
+
         curl -X POST \
           -H "Authorization: token $$GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
@@ -81,7 +164,7 @@ steps:
             "tag_name": "'$${NEW_VERSION}'",
             "name": "Release '$${NEW_VERSION}'",
             "body": "Release version '$${NEW_VERSION}'",
-            "draft": false,
+            "draft": '$${DRAFT}',
             "prerelease": false
           }' > release.json
 
@@ -102,4 +185,4 @@ availableSecrets:
       env: 'GITHUB_TOKEN'
 
 substitutions:
-  _PR_TYPE: 'patch' # Default to patch if no label is found
+  _PR_TYPE: '' # This will now be populated by the PR label if it exists
