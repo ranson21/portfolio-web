@@ -52,7 +52,7 @@ steps:
             echo "timestamp" > version_type.txt
           else
             LABEL=$(echo "$$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
-            echo "$LABEL" > version_type.txt
+            echo "$${LABEL}" > version_type.txt
           fi
         fi
 
