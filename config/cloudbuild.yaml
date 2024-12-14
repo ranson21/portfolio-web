@@ -237,12 +237,16 @@ steps:
 
         # Update the submodule
         cd apps/web/portfolio
+        OLD_COMMIT=$(git rev-parse HEAD)
         git fetch origin
         git checkout master
         git pull
-        cd ../../..
+
+        # Get the new commit hash
+        NEW_COMMIT=$(git rev-parse HEAD)
 
         # Commit the changes
+        cd ../../..
         git add apps/web/portfolio
         git commit -m "chore: update portfolio-web submodule to $${NEW_VERSION}"
 
@@ -256,8 +260,8 @@ steps:
           -H "Content-Type: application/json" \
           https://api.github.com/repos/$_REPO_OWNER/portfolio/pulls \
           -d '{
-            "title": "Update portfolio-web submodule to '"${NEW_VERSION}"'",
-            "body": "This PR updates the portfolio-web submodule from commit `'"${OLD_COMMIT}"'` to `'"${NEW_COMMIT}"'`\n\nVersion: '"${NEW_VERSION}"'",
+            "title": "Update portfolio-web submodule to '"$${NEW_VERSION}"'",
+            "body": "This PR updates the portfolio-web submodule from commit `'"$${OLD_COMMIT}"'` to `'"$${NEW_COMMIT}"'`\n\nVersion: '"$${NEW_VERSION}"'",
             "head": "'"${BRANCH_NAME}"'",
             "base": "master"
           }')
