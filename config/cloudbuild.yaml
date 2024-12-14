@@ -16,15 +16,15 @@ steps:
     args:
       - '-c'
       - |
-        echo "Debug: Raw _PR_TYPE value: $$_PR_TYPE"
+        echo "Debug: Raw _PR_TYPE value: $_PR_TYPE"
 
         # Check if PR_TYPE is empty array or not set
-        if [ -z "$$_PR_TYPE" ] || [ "$$_PR_TYPE" = "[]" ]; then
+        if [ -z "$_PR_TYPE" ] || [ "$_PR_TYPE" = "[]" ]; then
           echo "Debug: No labels found, using timestamp"
           echo "timestamp" > version_type.txt
         else
           # Clean the label string and get first label
-          LABEL=$(echo "$$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
+          LABEL=$(echo "$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
           echo "Debug: Cleaned label: $${LABEL}"
           
           # Save the cleaned label
