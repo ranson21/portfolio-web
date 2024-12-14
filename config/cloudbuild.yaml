@@ -19,7 +19,7 @@ steps:
       - |
         if [ "$$_IS_MERGE" = "true" ]; then
           # Extract PR number from commit message (Merge pull request #XX)
-          PR_NUMBER=$(echo "$$_PR_TYPE" | grep -o '#[0-9]\+' | tr -d '#')
+          PR_NUMBER=$(echo "$_PR_TYPE" | grep -o '#[0-9]\+' | tr -d '#')
           
           if [ ! -z "$${PR_NUMBER}" ]; then
             echo "Found PR number: $${PR_NUMBER}"
@@ -47,11 +47,11 @@ steps:
           fi
         else
           # Original PR label processing
-          if [ -z "$$_PR_TYPE" ] || [ "$$_PR_TYPE" = "[]" ]; then
+          if [ -z "$_PR_TYPE" ] || [ "$_PR_TYPE" = "[]" ]; then
             echo "Debug: No labels found, using timestamp"
             echo "timestamp" > version_type.txt
           else
-            LABEL=$(echo "$$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
+            LABEL=$(echo "$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
             echo "$${LABEL}" > version_type.txt
           fi
         fi
