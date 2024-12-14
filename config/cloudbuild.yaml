@@ -69,7 +69,7 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     env:
-      - 'GITHUB_TOKEN=$_GITHUB_TOKEN' # Define as environment variable
+      - 'GITHUB_TOKEN=$GITHUB_TOKEN' # Define as environment variable
     args:
       - '-c'
       - |
