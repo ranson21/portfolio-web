@@ -18,8 +18,10 @@ steps:
       - '-c'
       - |
         if [ "$$_IS_MERGE" = "true" ]; then
-          # Extract PR number from commit message (Merge pull request #XX)
-          PR_NUMBER=$(echo "$_PR_TYPE" | grep -o '#[0-9]\+' | tr -d '#')
+            # Get the last merge commit message
+          MERGE_MSG=$(git log -1 --pretty=%B)
+          # Extract PR number from merge commit message (format: Merge pull request #XX)
+          PR_NUMBER=$(echo "$MERGE_MSG" | grep -o '#[0-9]\+' | tr -d '#')
           
           if [ ! -z "$${PR_NUMBER}" ]; then
             echo "Found PR number: $${PR_NUMBER}"
