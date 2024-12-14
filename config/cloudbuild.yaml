@@ -21,13 +21,13 @@ steps:
           # Extract PR number from commit message (Merge pull request #XX)
           PR_NUMBER=$(echo "$$_PR_TYPE" | grep -o '#[0-9]\+' | tr -d '#')
           
-          if [ ! -z "$PR_NUMBER" ]; then
-            echo "Found PR number: $PR_NUMBER"
+          if [ ! -z "$${PR_NUMBER}" ]; then
+            echo "Found PR number: $${PR_NUMBER}"
             
             # Fetch PR labels using GitHub API
             curl -s -H "Authorization: token $$GITHUB_TOKEN" \
               -H "Accept: application/vnd.github.v3+json" \
-              "https://api.github.com/repos/$$_REPO_OWNER/portfolio-web/pulls/$PR_NUMBER" > pr_info.json
+              "https://api.github.com/repos/$$_REPO_OWNER/portfolio-web/pulls/$${PR_NUMBER}" > pr_info.json
             
             # Extract labels
             LABELS=$(cat pr_info.json | jq -r '.labels[].name' | tr '\n' ',' | sed 's/,$//')
