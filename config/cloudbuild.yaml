@@ -269,7 +269,7 @@ steps:
           -d '{
             "title": "Update portfolio-web submodule to '"$${NEW_VERSION}"'",
             "body": "This PR updates the portfolio-web submodule from commit `'"$${OLD_COMMIT}"'` to `'"$${NEW_COMMIT}"'`\n\nVersion: '"$${NEW_VERSION}"'",
-            "head": "'"${BRANCH_NAME}"'",
+            "head": "'"$${BRANCH_NAME}"'",
             "base": "master"
           }')
 
