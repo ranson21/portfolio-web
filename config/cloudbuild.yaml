@@ -17,7 +17,7 @@ steps:
     args:
       - '-c'
       - |
-        if [ "$$_IS_MERGE" = "true" ]; then
+        if [ "$_IS_MERGE" = "true" ]; then
             # Get the last merge commit message
           MERGE_MSG=$(git log -1 --pretty=%B)
           # Extract PR number from merge commit message (format: Merge pull request #XX)
