@@ -229,8 +229,18 @@ steps:
         git config user.name "Cloud Build"
 
         # Update submodule URL to use HTTPS instead of SSH
-        git config --file=.gitmodules submodule.apps/web/portfolio.url https://oauth2:$$GITHUB_TOKEN@github.com/$_REPO_OWNER/portfolio-web.git
-        git config -f .git/config --remove-section submodule.apps/web/portfolio 2>/dev/null || true
+        git config --file=.gitmodules --get-regexp '^submodule\..*\.url$' | while read key url; do
+            # Convert SSH URL to HTTPS with token
+            new_url=$(echo $url | sed 's|git@github.com:|https://oauth2:${GITHUB_TOKEN}@github.com/|g')
+            git config --file=.gitmodules "$key" "$new_url"
+
+            # Get the submodule path
+            path_key=$(echo $key | sed 's/\.url/.path/')
+            path=$(git config --file=.gitmodules --get "$path_key")
+
+            # Remove existing submodule config if it exists
+            git config -f .git/config --remove-section "submodule.$path" 2>/dev/null || true
+        done
 
         # Initialize and update submodules
         git submodule init
