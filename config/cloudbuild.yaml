@@ -284,20 +284,6 @@ steps:
 
         echo "Created PR #$${PR_NUMBER}"
 
-        # Create an approval review
-        curl -X POST \
-          -H "Authorization: token $$GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Content-Type: application/json" \
-          https://api.github.com/repos/$_REPO_OWNER/portfolio/pulls/$${PR_NUMBER}/reviews \
-          -d '{
-            "event": "APPROVE",
-            "body": "Auto-approving submodule update"
-          }'
-
-        # Wait a few seconds for the approval to be processed
-        sleep 5
-
         # Merge the PR
         curl -X PUT \
           -H "Authorization: token $$GITHUB_TOKEN" \
