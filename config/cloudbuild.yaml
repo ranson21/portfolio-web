@@ -239,6 +239,7 @@ steps:
         cd apps/web/portfolio
         git fetch origin
         git checkout master
+        git pull
         cd ../../..
 
         # Commit the changes
