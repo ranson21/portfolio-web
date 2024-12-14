@@ -7,8 +7,8 @@ steps:
       - '-c'
       - |
         git fetch --tags
-        CURRENT_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0")
-        echo $CURRENT_VERSION > current_version.txt
+        git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0" > current_version.txt
+        echo "$(cat current_version.txt)"
 
   # Bump version based on PR label
   - name: 'python:3.9'
