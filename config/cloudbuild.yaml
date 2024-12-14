@@ -10,25 +10,50 @@ steps:
         git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0" > current_version.txt
         echo "$(cat current_version.txt)"
 
-  # Process PR labels and determine version type
+  # Process PR info and determine version type
   - name: 'bash'
     entrypoint: 'bash'
+    secretEnv: ['GITHUB_TOKEN']
     args:
       - '-c'
       - |
-        echo "Debug: Raw _PR_TYPE value: $_PR_TYPE"
-
-        # Check if PR_TYPE is empty array or not set
-        if [ -z "$_PR_TYPE" ] || [ "$_PR_TYPE" = "[]" ]; then
-          echo "Debug: No labels found, using timestamp"
-          echo "timestamp" > version_type.txt
-        else
-          # Clean the label string and get first label
-          LABEL=$(echo "$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
-          echo "Debug: Cleaned label: $${LABEL}"
+        if [ "$$_IS_MERGE" = "true" ]; then
+          # Extract PR number from commit message (Merge pull request #XX)
+          PR_NUMBER=$(echo "$$_PR_TYPE" | grep -o '#[0-9]\+' | tr -d '#')
           
-          # Save the cleaned label
-          echo "$${LABEL}" > version_type.txt
+          if [ ! -z "$PR_NUMBER" ]; then
+            echo "Found PR number: $PR_NUMBER"
+            
+            # Fetch PR labels using GitHub API
+            curl -s -H "Authorization: token $$GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/$$_REPO_OWNER/portfolio-web/pulls/$PR_NUMBER" > pr_info.json
+            
+            # Extract labels
+            LABELS=$(cat pr_info.json | jq -r '.labels[].name' | tr '\n' ',' | sed 's/,$//')
+            
+            if [[ $LABELS == *"major"* ]]; then
+              echo "major" > version_type.txt
+            elif [[ $LABELS == *"minor"* ]]; then
+              echo "minor" > version_type.txt
+            elif [[ $LABELS == *"patch"* ]]; then
+              echo "patch" > version_type.txt
+            else
+              echo "timestamp" > version_type.txt
+            fi
+          else
+            echo "No PR number found, using timestamp"
+            echo "timestamp" > version_type.txt
+          fi
+        else
+          # Original PR label processing
+          if [ -z "$$_PR_TYPE" ] || [ "$$_PR_TYPE" = "[]" ]; then
+            echo "Debug: No labels found, using timestamp"
+            echo "timestamp" > version_type.txt
+          else
+            LABEL=$(echo "$$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
+            echo "$LABEL" > version_type.txt
+          fi
         fi
 
         echo "Debug: Final version_type: $(cat version_type.txt)"
