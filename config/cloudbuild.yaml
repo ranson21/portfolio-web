@@ -10,18 +10,6 @@ steps:
         git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0" > current_version.txt
         echo "$(cat current_version.txt)"
 
-  # Try to get PR label, fallback to timestamp if not found
-  - name: 'bash'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        if [[ "$$_PR_TYPE" == "" ]] || [[ "$$_PR_TYPE" == "null" ]]; then
-          echo "timestamp" > pr_type.txt
-        else
-          echo "$$_PR_TYPE" > pr_type.txt
-        fi
-
   # Bump version based on PR label or use timestamp
   - name: 'python:3.9'
     entrypoint: 'python'
@@ -60,9 +48,8 @@ steps:
         with open('current_version.txt', 'r') as f:
             current_version = f.read().strip()
 
-        # Read PR type from file
-        with open('pr_type.txt', 'r') as f:
-            bump_type = f.read().strip()
+        # Get PR_TYPE from environment
+        bump_type = os.getenv('_PR_TYPE', 'timestamp')
 
         # Calculate new version
         new_version = bump_version(current_version, bump_type)
