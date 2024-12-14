@@ -21,7 +21,7 @@ steps:
             # Get the last merge commit message
           MERGE_MSG=$(git log -1 --pretty=%B)
           # Extract PR number from merge commit message (format: Merge pull request #XX)
-          PR_NUMBER=$(echo "$MERGE_MSG" | grep -o '#[0-9]\+' | tr -d '#')
+          PR_NUMBER=$(echo "$${MERGE_MSG}" | grep -o '#[0-9]\+' | tr -d '#')
           
           if [ ! -z "$${PR_NUMBER}" ]; then
             echo "Found PR number: $${PR_NUMBER}"
