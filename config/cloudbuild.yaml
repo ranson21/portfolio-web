@@ -238,11 +238,12 @@ steps:
         # Update the submodule
         cd apps/web/portfolio
         git fetch origin
-        git checkout $${NEW_VERSION}
+        git checkout master
+        git pull
         cd ../../..
 
         # Commit the changes
-        git add apps/web/portfolio
+        git add .
         git commit -m "chore: update portfolio-web submodule to $${NEW_VERSION}"
 
         # Push the branch
