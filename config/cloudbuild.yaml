@@ -20,7 +20,7 @@ steps:
         echo "$${LATEST_TAG}" > current_version.txt
 
   # Process PR info and determine version type
-  - name: 'bash'
+  - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
     secretEnv: ['GITHUB_TOKEN']
     args:
