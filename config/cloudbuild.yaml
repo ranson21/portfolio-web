@@ -72,6 +72,12 @@ steps:
         # Save new version
         with open('new_version.txt', 'w') as f:
             f.write(new_version)
+            
+        # Save whether this is a semantic version for later use
+        is_semantic = bump_type.lower() in ['major', 'minor', 'patch']
+        with open('is_semantic.txt', 'w') as f:
+            f.write(str(is_semantic).lower())
+            
         print(f"Version update: {current_version} -> {new_version}")
 
   # Install dependencies
@@ -96,6 +102,15 @@ steps:
       - '-c'
       - |
         NEW_VERSION=$(cat new_version.txt)
+        IS_SEMANTIC=$(cat is_semantic.txt)
+
+        # Set draft status based on whether this is a semantic version
+        if [ "$IS_SEMANTIC" = "true" ]; then
+          DRAFT="false"
+        else
+          DRAFT="true"
+        fi
+
         curl -X POST \
           -H "Authorization: token $$GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
@@ -105,7 +120,7 @@ steps:
             "tag_name": "'$${NEW_VERSION}'",
             "name": "Release '$${NEW_VERSION}'",
             "body": "Release version '$${NEW_VERSION}'",
-            "draft": false,
+            "draft": '$${DRAFT}',
             "prerelease": false
           }' > release.json
 
