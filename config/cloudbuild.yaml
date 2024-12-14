@@ -105,7 +105,7 @@ steps:
         IS_SEMANTIC=$(cat is_semantic.txt)
 
         # Set draft status based on whether this is a semantic version
-        if [ "$IS_SEMANTIC" = "true" ]; then
+        if [ "$${IS_SEMANTIC}" = "true" ]; then
           DRAFT="false"
         else
           DRAFT="true"
