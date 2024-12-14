@@ -3,7 +3,7 @@ steps:
   # Get latest version tag
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
-     args:
+    args:
       - '-c'
       - |
         echo "Debug: Fetching full history and tags..."
