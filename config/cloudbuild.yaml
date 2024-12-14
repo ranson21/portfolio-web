@@ -232,21 +232,21 @@ steps:
         NEW_VERSION=$(cat ../new_version.txt)
 
         # Create a new branch
-        BRANCH_NAME="update-portfolio-web-${NEW_VERSION}"
-        git checkout -b $BRANCH_NAME
+        BRANCH_NAME="update-portfolio-web-$${NEW_VERSION}"
+        git checkout -b $${BRANCH_NAME}
 
         # Update the submodule
         cd apps/web/portfolio
         git fetch origin
-        git checkout $NEW_VERSION
+        git checkout $${NEW_VERSION}
         cd ../../..
 
         # Commit the changes
         git add apps/web/portfolio
-        git commit -m "chore: update portfolio-web submodule to ${NEW_VERSION}"
+        git commit -m "chore: update portfolio-web submodule to $${NEW_VERSION}"
 
         # Push the branch
-        git push origin $BRANCH_NAME
+        git push origin $${BRANCH_NAME}
 
         # Create PR using GitHub API
         curl -X POST \
@@ -255,9 +255,9 @@ steps:
           -H "Content-Type: application/json" \
           https://api.github.com/repos/$_REPO_OWNER/portfolio/pulls \
           -d '{
-            "title": "Update portfolio-web submodule to '"${NEW_VERSION}"'",
-            "body": "This PR updates the portfolio-web submodule to version '"${NEW_VERSION}"'",
-            "head": "'"${BRANCH_NAME}"'",
+            "title": "Update portfolio-web submodule to '"$${NEW_VERSION}"'",
+            "body": "This PR updates the portfolio-web submodule to version '"$${NEW_VERSION}"'",
+            "head": "'"$${BRANCH_NAME}"'",
             "base": "master"
           }'
 
