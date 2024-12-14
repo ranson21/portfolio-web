@@ -41,7 +41,7 @@ steps:
             # Fetch PR labels using GitHub API (including closed PRs)
             curl -s -H "Authorization: token $$GITHUB_TOKEN" \
               -H "Accept: application/vnd.github.v3+json" \
-              "https://api.github.com/repos/$$_REPO_OWNER/portfolio-web/pulls/$${PR_NUMBER}?state=all" > pr_info.json
+              "https://api.github.com/repos/$_REPO_OWNER/portfolio-web/pulls/$${PR_NUMBER}?state=all" > pr_info.json
             
             # Add debug output
             echo "Debug: PR Info Response:"
