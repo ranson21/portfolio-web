@@ -239,10 +239,10 @@ steps:
         git fetch origin
         git checkout master
         git pull
-        git checkout -b $${BRANCH_NAME}
         cd ../../..
 
         # Commit the changes
+        git checkout -b $${BRANCH_NAME}
         git add .
         git commit -m "chore: update portfolio-web submodule to $${NEW_VERSION}"
 
