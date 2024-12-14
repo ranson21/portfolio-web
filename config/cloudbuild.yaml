@@ -7,6 +7,9 @@ steps:
     args:
       - '-c'
       - |
+        # Install curl and jq
+        apt-get update && apt-get install -y curl jq
+
         # Get the latest release using GitHub API
         LATEST_TAG=$(curl -s -H "Authorization: token $$GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
