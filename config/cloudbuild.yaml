@@ -232,8 +232,8 @@ steps:
         git config --global url."https://oauth2:$$GITHUB_TOKEN@github.com/".insteadOf "git@github.com:"
 
         # Initialize and update submodules
-        git submodule init
-        git submodule update
+        git submodule init apps/web/portfolio
+        git submodule update apps/web/portfolio
 
         # Get the new version
         NEW_VERSION=$(cat ../new_version.txt)
