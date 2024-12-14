@@ -221,12 +221,16 @@ steps:
         apt-get update && apt-get install -y curl jq
 
         # Clone the parent repository
-        git clone https://oauth2:$$GITHUB_TOKEN@github.com/$_REPO_OWNER/portfolio.git parent-repo
+        git clone --recurse-submodules https://oauth2:$$GITHUB_TOKEN@github.com/$_REPO_OWNER/portfolio.git parent-repo
         cd parent-repo
 
         # Configure Git
         git config user.email "cloudbuild@example.com"
         git config user.name "Cloud Build"
+
+        # Initialize and update submodules
+        git submodule init
+        git submodule update
 
         # Get the new version
         NEW_VERSION=$(cat ../new_version.txt)
