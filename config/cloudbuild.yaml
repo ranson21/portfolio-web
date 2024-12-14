@@ -32,11 +32,11 @@ steps:
             # Extract labels
             LABELS=$(cat pr_info.json | jq -r '.labels[].name' | tr '\n' ',' | sed 's/,$//')
             
-            if [[ $LABELS == *"major"* ]]; then
+            if [[ $${LABELS} == *"major"* ]]; then
               echo "major" > version_type.txt
-            elif [[ $LABELS == *"minor"* ]]; then
+            elif [[ $${LABELS} == *"minor"* ]]; then
               echo "minor" > version_type.txt
-            elif [[ $LABELS == *"patch"* ]]; then
+            elif [[ $${LABELS} == *"patch"* ]]; then
               echo "patch" > version_type.txt
             else
               echo "timestamp" > version_type.txt
