@@ -10,7 +10,7 @@ steps:
         git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0" > current_version.txt
         echo "$(cat current_version.txt)"
 
-  # Bump version based on PR label
+  # Bump version based on PR label or use timestamp
   - name: 'python:3.9'
     entrypoint: 'python'
     args:
@@ -18,10 +18,18 @@ steps:
       - |
         import os
         import re
+        from datetime import datetime
 
         def bump_version(current, bump_type):
             # Remove 'v' prefix if present
             current = current.lstrip('v')
+            
+            # If no PR_TYPE specified, use current version with timestamp
+            if not bump_type or bump_type.lower() == 'none':
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                return f"v{current}-{timestamp}"
+            
+            # Regular semantic version bumping
             major, minor, patch = map(int, current.split('.'))
             
             if bump_type == 'major':
@@ -40,8 +48,8 @@ steps:
         with open('current_version.txt', 'r') as f:
             current_version = f.read().strip()
 
-        # Determine bump type from PR label
-        bump_type = os.getenv('_PR_TYPE', 'patch').lower()  # default to patch
+        # Get PR_TYPE from environment, or None if not specified
+        bump_type = os.getenv('_PR_TYPE', None)
 
         # Calculate new version
         new_version = bump_version(current_version, bump_type)
@@ -49,7 +57,7 @@ steps:
         # Save new version
         with open('new_version.txt', 'w') as f:
             f.write(new_version)
-        print(f"Bumping version from {current_version} to {new_version}")
+        print(f"Version update: {current_version} -> {new_version}")
 
   # Install dependencies
   - name: 'node:18'
@@ -103,4 +111,4 @@ availableSecrets:
       env: 'GITHUB_TOKEN'
 
 substitutions:
-  _PR_TYPE: 'patch' # Default to patch if no label is found
+  _PR_TYPE: '' # Empty default to trigger timestamp-based versioning
