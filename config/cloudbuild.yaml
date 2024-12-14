@@ -16,13 +16,22 @@ steps:
     args:
       - '-c'
       - |
+        echo "Debug: Raw _PR_TYPE value: $$_PR_TYPE"
+
         # Check if PR_TYPE is empty array or not set
         if [ -z "$$_PR_TYPE" ] || [ "$$_PR_TYPE" = "[]" ]; then
+          echo "Debug: No labels found, using timestamp"
           echo "timestamp" > version_type.txt
         else
-          # Take first label from the array
-          echo "$$_PR_TYPE" | tr '[],' '\n' | head -n 1 > version_type.txt
+          # Clean the label string and get first label
+          LABEL=$(echo "$$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
+          echo "Debug: Cleaned label: $LABEL"
+          
+          # Save the cleaned label
+          echo "$LABEL" > version_type.txt
         fi
+
+        echo "Debug: Final version_type: $(cat version_type.txt)"
 
   # Bump version based on PR label or use timestamp
   - name: 'python:3.9'
@@ -35,16 +44,19 @@ steps:
         from datetime import datetime
 
         def bump_version(current, bump_type):
+            print(f"Debug: Processing bump_type: {bump_type}")
             # Remove 'v' prefix if present
             current = current.lstrip('v')
             
             # If PR_TYPE is timestamp, use current version with timestamp
-            if bump_type.lower() == 'timestamp':
+            if bump_type.lower().strip() == 'timestamp':
                 timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
                 return f"v{current}-{timestamp}"
             
             # Regular semantic version bumping
             major, minor, patch = map(int, current.split('.'))
+            bump_type = bump_type.lower().strip()
+            print(f"Debug: Cleaned bump_type: {bump_type}")
             
             if bump_type == 'major':
                 major += 1
@@ -53,18 +65,24 @@ steps:
             elif bump_type == 'minor':
                 minor += 1
                 patch = 0
-            else:  # patch
+            elif bump_type == 'patch':
                 patch += 1
+            else:
+                print(f"Debug: Unrecognized bump_type, defaulting to timestamp")
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                return f"v{current}-{timestamp}"
                 
             return f"v{major}.{minor}.{patch}"
 
         # Read current version
         with open('current_version.txt', 'r') as f:
             current_version = f.read().strip()
+        print(f"Debug: Current version: {current_version}")
 
         # Read version type from file
         with open('version_type.txt', 'r') as f:
             bump_type = f.read().strip()
+        print(f"Debug: Read bump_type from file: {bump_type}")
 
         # Calculate new version
         new_version = bump_version(current_version, bump_type)
@@ -74,10 +92,11 @@ steps:
             f.write(new_version)
             
         # Save whether this is a semantic version for later use
-        is_semantic = bump_type.lower() in ['major', 'minor', 'patch']
+        is_semantic = bump_type.lower().strip() in ['major', 'minor', 'patch']
         with open('is_semantic.txt', 'w') as f:
             f.write(str(is_semantic).lower())
-            
+
+        print(f"Debug: is_semantic: {is_semantic}")
         print(f"Version update: {current_version} -> {new_version}")
 
   # Install dependencies
