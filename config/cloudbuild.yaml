@@ -3,12 +3,18 @@ steps:
   # Get latest version tag
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
-    args:
+     args:
       - '-c'
       - |
-        git fetch --tags
-        git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0" > current_version.txt
-        echo "$(cat current_version.txt)"
+        echo "Debug: Fetching full history and tags..."
+        git fetch --unshallow --tags origin
+        echo "Debug: Listing all tags..."
+        git tag -l
+        echo "Debug: Getting latest tag..."
+        LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v0.0.0")
+        echo "Debug: Latest tag is: $${LATEST_TAG}"
+        echo "$${LATEST_TAG}" > current_version.txt
+        echo "Debug: Written to file: $(cat current_version.txt)"
 
   # Process PR info and determine version type
   - name: 'bash'
