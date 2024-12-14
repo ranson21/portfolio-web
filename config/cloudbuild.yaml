@@ -25,10 +25,10 @@ steps:
         else
           # Clean the label string and get first label
           LABEL=$(echo "$$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
-          echo "Debug: Cleaned label: $LABEL"
+          echo "Debug: Cleaned label: $${LABEL}"
           
           # Save the cleaned label
-          echo "$LABEL" > version_type.txt
+          echo "$${LABEL}" > version_type.txt
         fi
 
         echo "Debug: Final version_type: $(cat version_type.txt)"
