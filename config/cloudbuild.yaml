@@ -204,6 +204,63 @@ steps:
           --data-binary @release.tar.gz \
           "https://uploads.github.com/repos/ranson21/portfolio-web/releases/$${RELEASE_ID}/assets?name=release.tar.gz"
 
+  # Update parent repo submodule and create PR
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    secretEnv: ['GITHUB_TOKEN']
+    args:
+      - '-c'
+      - |
+        # Only run this step if IS_MERGE is true
+        if [ "$_IS_MERGE" != "true" ]; then
+          echo "Skipping submodule update as this is not a merge to main"
+          exit 0
+        fi
+
+        # Install necessary tools
+        apt-get update && apt-get install -y curl jq
+
+        # Clone the parent repository
+        git clone https://oauth2:$$GITHUB_TOKEN@github.com/$_REPO_OWNER/portfolio.git parent-repo
+        cd parent-repo
+
+        # Configure Git
+        git config user.email "cloudbuild@example.com"
+        git config user.name "Cloud Build"
+
+        # Get the new version
+        NEW_VERSION=$(cat ../new_version.txt)
+
+        # Create a new branch
+        BRANCH_NAME="update-portfolio-web-$${NEW_VERSION}"
+        git checkout -b $${BRANCH_NAME}
+
+        # Update the submodule
+        cd apps/web/portfolio
+        git fetch origin
+        git checkout $${NEW_VERSION}
+        cd ../../..
+
+        # Commit the changes
+        git add apps/web/portfolio
+        git commit -m "chore: update portfolio-web submodule to $${NEW_VERSION}"
+
+        # Push the branch
+        git push origin $${BRANCH_NAME}
+
+        # Create PR using GitHub API
+        curl -X POST \
+          -H "Authorization: token $$GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          https://api.github.com/repos/$_REPO_OWNER/portfolio/pulls \
+          -d '{
+            "title": "Update portfolio-web submodule to '"$${NEW_VERSION}"'",
+            "body": "This PR updates the portfolio-web submodule to version '"$${NEW_VERSION}"'",
+            "head": "'"$${BRANCH_NAME}"'",
+            "base": "master"
+          }'
+
 availableSecrets:
   secretManager:
     - versionName: projects/$PROJECT_ID/secrets/github_token/versions/latest
