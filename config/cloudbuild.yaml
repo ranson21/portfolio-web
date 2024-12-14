@@ -68,12 +68,14 @@ steps:
   # Create GitHub release with new version
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
+    env:
+      - 'GITHUB_TOKEN=$_GITHUB_TOKEN' # Define as environment variable
     args:
       - '-c'
       - |
         NEW_VERSION=$(cat new_version.txt)
         curl -X POST \
-          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Authorization: token $$GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Content-Type: application/json" \
           https://api.github.com/repos/ranson21/portfolio-web/releases \
@@ -90,7 +92,7 @@ steps:
 
         # Upload asset
         curl -X POST \
-          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Authorization: token $$GITHUB_TOKEN" \
           -H "Content-Type: application/gzip" \
           -H "Accept: application/vnd.github.v3+json" \
           --data-binary @release.tar.gz \
