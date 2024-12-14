@@ -26,6 +26,9 @@ steps:
     args:
       - '-c'
       - |
+        # Install curl and jq
+        apt-get update && apt-get install -y curl jq
+
         if [ "$_IS_MERGE" = "true" ]; then
             # Get the last merge commit message
           MERGE_MSG=$(git log -1 --pretty=%B)
@@ -156,6 +159,9 @@ steps:
     args:
       - '-c'
       - |
+        # Install curl and jq
+        apt-get update && apt-get install -y jq
+
         NEW_VERSION=$(cat new_version.txt)
         IS_SEMANTIC=$(cat is_semantic.txt)
 
