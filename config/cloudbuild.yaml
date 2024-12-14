@@ -229,7 +229,7 @@ steps:
         git config user.name "Cloud Build"
 
         # Configure Git to replace SSH URLs with HTTPS
-        git config --global url."https://oauth2:${GITHUB_TOKEN}@github.com/".insteadOf "git@github.com:"
+        git config --global url."https://oauth2:$$GITHUB_TOKEN@github.com/".insteadOf "git@github.com:"
 
         # Initialize and update submodules
         git submodule init
