@@ -3,12 +3,21 @@ steps:
   # Get latest version tag
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
+    secretEnv: ['GITHUB_TOKEN']
     args:
       - '-c'
       - |
-        git fetch --tags
-        git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0" > current_version.txt
-        echo "$(cat current_version.txt)"
+        # Install curl and jq
+        apt-get update && apt-get install -y curl jq
+
+        # Get the latest release using GitHub API
+        LATEST_TAG=$(curl -s -H "Authorization: token $$GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/repos/$_REPO_OWNER/portfolio-web/releases/latest" | \
+          jq -r '.tag_name' || echo "v0.0.0")
+
+        echo "Latest release tag: $${LATEST_TAG}"
+        echo "$${LATEST_TAG}" > current_version.txt
 
   # Process PR info and determine version type
   - name: 'bash'
@@ -17,7 +26,7 @@ steps:
     args:
       - '-c'
       - |
-        if [ "$$_IS_MERGE" = "true" ]; then
+        if [ "$_IS_MERGE" = "true" ]; then
             # Get the last merge commit message
           MERGE_MSG=$(git log -1 --pretty=%B)
           # Extract PR number from merge commit message (format: Merge pull request #XX)
@@ -151,7 +160,7 @@ steps:
         IS_SEMANTIC=$(cat is_semantic.txt)
 
         # Set draft status based on whether this is a semantic version
-        if [ "$${IS_SEMANTIC}" = "true" ]; then
+        if [ "$_IS_MERGE" = "true" ]; then
           DRAFT="false"
         else
           DRAFT="true"
