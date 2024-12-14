@@ -233,33 +233,74 @@ steps:
 
         # Create a new branch
         BRANCH_NAME="update-portfolio-web-$${NEW_VERSION}"
+        git checkout -b $${BRANCH_NAME}
 
         # Update the submodule
         cd apps/web/portfolio
+        OLD_COMMIT=$(git rev-parse HEAD)
         git fetch origin
         git checkout master
         git pull
-        cd ../../..
+
+        # Get the new commit hash
+        NEW_COMMIT=$(git rev-parse HEAD)
 
         # Commit the changes
-        git checkout -b $${BRANCH_NAME}
-        git add .
+        cd ../../..
+        git add apps/web/portfolio
         git commit -m "chore: update portfolio-web submodule to $${NEW_VERSION}"
 
         # Push the branch
         git push origin $${BRANCH_NAME}
 
-        # Create PR using GitHub API
-        curl -X POST \
+        # Create PR and capture the response
+        PR_RESPONSE=$(curl -X POST \
           -H "Authorization: token $$GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Content-Type: application/json" \
           https://api.github.com/repos/$_REPO_OWNER/portfolio/pulls \
           -d '{
             "title": "Update portfolio-web submodule to '"$${NEW_VERSION}"'",
-            "body": "This PR updates the portfolio-web submodule to version '"$${NEW_VERSION}"'",
-            "head": "'"$${BRANCH_NAME}"'",
+            "body": "This PR updates the portfolio-web submodule from commit `'"$${OLD_COMMIT}"'` to `'"$${NEW_COMMIT}"'`\n\nVersion: '"$${NEW_VERSION}"'",
+            "head": "'"${BRANCH_NAME}"'",
             "base": "master"
+          }')
+
+        # Extract PR number
+        PR_NUMBER=$(echo $${PR_RESPONSE} | jq -r '.number')
+
+        if [ -z "$${PR_NUMBER}" ] || [ "$${PR_NUMBER}" = "null" ]; then
+          echo "Failed to create PR"
+          echo "API Response: $${PR_RESPONSE}"
+          exit 1
+        fi
+
+        echo "Created PR #$${PR_NUMBER}"
+
+        # Create an approval review
+        curl -X POST \
+          -H "Authorization: token $$GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          https://api.github.com/repos/$_REPO_OWNER/portfolio/pulls/$${PR_NUMBER}/reviews \
+          -d '{
+            "event": "APPROVE",
+            "body": "Auto-approving submodule update"
+          }'
+
+        # Wait a few seconds for the approval to be processed
+        sleep 5
+
+        # Merge the PR
+        curl -X PUT \
+          -H "Authorization: token $$GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          https://api.github.com/repos/$_REPO_OWNER/portfolio/pulls/$${PR_NUMBER}/merge \
+          -d '{
+            "merge_method": "squash",
+            "commit_title": "chore: update portfolio-web submodule to '"$${NEW_VERSION}"'",
+            "commit_message": "Auto-merged submodule update"
           }'
 
 availableSecrets:
