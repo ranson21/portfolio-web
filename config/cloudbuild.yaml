@@ -221,12 +221,15 @@ steps:
         apt-get update && apt-get install -y curl jq
 
         # Clone the parent repository
-        git clone --recurse-submodules https://oauth2:$$GITHUB_TOKEN@github.com/$_REPO_OWNER/portfolio.git parent-repo
+        git clone https://oauth2:$$GITHUB_TOKEN@github.com/$_REPO_OWNER/portfolio.git parent-repo
         cd parent-repo
 
         # Configure Git
         git config user.email "cloudbuild@example.com"
         git config user.name "Cloud Build"
+
+        # Configure Git to replace SSH URLs with HTTPS
+        git config --global url."https://oauth2:$$GITHUB_TOKEN@github.com/".insteadOf "git@github.com:"
 
         # Initialize and update submodules
         git submodule init
