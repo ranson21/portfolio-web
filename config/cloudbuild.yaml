@@ -1,11 +1,8 @@
 steps:
   # Get latest version
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
-    args:
-      ['--action', 'get-version', '--github-token', '${_GITHUB_TOKEN}', '--repo-owner', '${_REPO_OWNER}', '--repo-name', 'portfolio-web']
+    args: ['--action', 'get-version', '--repo-owner', '${_REPO_OWNER}', '--repo-name', 'portfolio-web']
     secretEnv: ['GITHUB_TOKEN']
-    env:
-      - '_GITHUB_TOKEN=$$GITHUB_TOKEN'
     id: 'get-version'
 
   # Process PR info and bump version
@@ -14,8 +11,6 @@ steps:
       [
         '--action',
         'bump-version',
-        '--github-token',
-        '${_GITHUB_TOKEN}',
         '--repo-owner',
         '${_REPO_OWNER}',
         '--repo-name',
@@ -26,9 +21,8 @@ steps:
         '$${_PR_TYPE:-timestamp}',
       ]
     secretEnv: ['GITHUB_TOKEN']
-    env:
-      - '_GITHUB_TOKEN=$$GITHUB_TOKEN'
     id: 'bump-version'
+    waitFor: ['get-version']
 
   # Install dependencies
   - name: 'node:18'
@@ -50,8 +44,6 @@ steps:
       [
         '--action',
         'create-release',
-        '--github-token',
-        '${_GITHUB_TOKEN}',
         '--repo-owner',
         '${_REPO_OWNER}',
         '--repo-name',
@@ -62,9 +54,8 @@ steps:
         '$${_IS_MERGE:-true}',
       ]
     secretEnv: ['GITHUB_TOKEN']
-    env:
-      - '_GITHUB_TOKEN=$$GITHUB_TOKEN'
     id: 'create-release'
+    waitFor: ['bump-version']
 
   # Update parent repo submodule
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
@@ -72,8 +63,6 @@ steps:
       [
         '--action',
         'update-submodule',
-        '--github-token',
-        '${_GITHUB_TOKEN}',
         '--repo-owner',
         '${_REPO_OWNER}',
         '--repo-name',
@@ -86,8 +75,6 @@ steps:
         '$$(cat new_version.txt)',
       ]
     secretEnv: ['GITHUB_TOKEN']
-    env:
-      - '_GITHUB_TOKEN=$$GITHUB_TOKEN'
     id: 'update-submodule'
     waitFor: ['create-release']
 
