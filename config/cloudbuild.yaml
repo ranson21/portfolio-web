@@ -23,6 +23,7 @@ steps:
     secretEnv: ['GITHUB_TOKEN']
     id: 'bump-version'
     waitFor: ['get-version']
+
   # Add this to see what files are created
   - name: 'ubuntu'
     entrypoint: 'bash'
