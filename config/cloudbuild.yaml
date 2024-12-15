@@ -33,6 +33,8 @@ steps:
         ls -la
         echo "Content of new_version.txt (if exists):"
         find / -name new_version.txt 2>/dev/null || echo "File not found"
+    waitFor: ['bump-version']
+
   # Install dependencies
   - name: 'node:18'
     entrypoint: npm
