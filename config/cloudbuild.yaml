@@ -24,6 +24,26 @@ steps:
     id: 'bump-version'
     waitFor: ['get-version']
 
+  # Install dependencies
+  - name: 'node:18'
+    entrypoint: npm
+    args: ['install']
+    id: 'install'
+    waitFor: ['bump-version']
+
+  # Build the Vite app
+  - name: 'node:18'
+    entrypoint: npm
+    args: ['run', 'build']
+    id: 'build'
+    waitFor: ['install']
+
+  # Create tar archive of dist directory
+  - name: 'ubuntu'
+    args: ['tar', '-czf', 'release.tar.gz', '-C', 'dist', '.']
+    id: 'create-tar'
+    waitFor: ['build']
+
   # Add this to see what files are created
   - name: 'ubuntu'
     entrypoint: 'bash'
@@ -34,21 +54,7 @@ steps:
         ls -la
         echo "Content of new_version.txt (if exists):"
         find / -name new_version.txt 2>/dev/null || echo "File not found"
-    waitFor: ['bump-version']
-
-  # Install dependencies
-  - name: 'node:18'
-    entrypoint: npm
-    args: ['install']
-
-  # Build the Vite app
-  - name: 'node:18'
-    entrypoint: npm
-    args: ['run', 'build']
-
-  # Create tar archive of dist directory
-  - name: 'ubuntu'
-    args: ['tar', '-czf', 'release.tar.gz', '-C', 'dist', '.']
+    waitFor: ['create-tar']
 
   # Create GitHub release
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
@@ -78,7 +84,7 @@ steps:
         fi
     secretEnv: ['GITHUB_TOKEN']
     id: 'create-release'
-    waitFor: ['bump-version']
+    waitFor: ['create-tar']
 
   # Update parent repo submodule
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
