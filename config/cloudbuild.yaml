@@ -23,7 +23,16 @@ steps:
     secretEnv: ['GITHUB_TOKEN']
     id: 'bump-version'
     waitFor: ['get-version']
-
+  # Add this to see what files are created
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Files after bump-version:"
+        ls -la
+        echo "Content of new_version.txt (if exists):"
+        find / -name new_version.txt 2>/dev/null || echo "File not found"
   # Install dependencies
   - name: 'node:18'
     entrypoint: npm
