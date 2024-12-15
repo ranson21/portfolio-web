@@ -96,6 +96,8 @@ steps:
         'apps/web/portfolio',
         '--current-version',
         '$$(cat new_version.txt)',
+        '--is-merge',
+        '$${_IS_MERGE}',
       ]
     secretEnv: ['GITHUB_TOKEN']
     id: 'update-submodule'
