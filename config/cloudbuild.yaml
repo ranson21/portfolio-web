@@ -44,7 +44,7 @@ steps:
               "https://api.github.com/repos/$_REPO_OWNER/portfolio-web/pulls/$${PR_NUMBER}?state=all" > pr_info.json
 
             # Add debug output
-            echo "Debug: PR Info Response:"
+            # echo "Debug: PR Info Response:"
             cat pr_info.json
 
             # Extract labels with error handling
