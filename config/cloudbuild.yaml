@@ -1,300 +1,113 @@
-# cloudbuild.yaml
 steps:
-  # Get latest version tag
-  - name: 'gcr.io/cloud-builders/git'
-    entrypoint: 'bash'
+  # Get latest version
+  - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
+    args: ['--action', 'get-version', '--repo-owner', '${_REPO_OWNER}', '--repo-name', 'portfolio-web']
     secretEnv: ['GITHUB_TOKEN']
+    id: 'get-version'
+
+  # Process PR info and bump version
+  - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
     args:
-      - '-c'
-      - |
-        # Install curl and jq
-        apt-get update && apt-get install -y curl jq
-
-        # Get the latest release using GitHub API
-        LATEST_TAG=$(curl -s -H "Authorization: token $$GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/repos/$_REPO_OWNER/portfolio-web/releases/latest" | \
-          jq -r '.tag_name' || echo "v0.0.0")
-
-        echo "Latest release tag: $${LATEST_TAG}"
-        echo "$${LATEST_TAG}" > current_version.txt
-
-  # Process PR info and determine version type
-  - name: 'gcr.io/cloud-builders/git'
-    entrypoint: 'bash'
+      [
+        '--action',
+        'bump-version',
+        '--repo-owner',
+        '${_REPO_OWNER}',
+        '--repo-name',
+        'portfolio-web',
+        '--current-version',
+        '$$(cat current_version.txt)',
+        '--version-type',
+        '$${_PR_TYPE:-timestamp}',
+      ]
     secretEnv: ['GITHUB_TOKEN']
-    args:
-      - '-c'
-      - |
-        # Install curl and jq
-        apt-get update && apt-get install -y curl jq
-
-        if [ "$_IS_MERGE" = "true" ]; then
-          # Get the last merge commit message
-          MERGE_MSG=$(git log -1 --pretty=%B)
-          # Extract PR number from merge commit message (format: Merge pull request #XX)
-          PR_NUMBER=$(echo "$${MERGE_MSG}" | grep -o '#[0-9]\+' | tr -d '#')
-
-          if [ ! -z "$${PR_NUMBER}" ]; then
-            echo "Found PR number: $${PR_NUMBER}"
-
-            # Fetch PR labels using GitHub API (including closed PRs)
-            curl -s -H "Authorization: token $$GITHUB_TOKEN" \
-              -H "Accept: application/vnd.github.v3+json" \
-              "https://api.github.com/repos/$_REPO_OWNER/portfolio-web/pulls/$${PR_NUMBER}?state=all" > pr_info.json
-
-            # Add debug output
-            # echo "Debug: PR Info Response:"
-            cat pr_info.json
-
-            # Extract labels with error handling
-            LABELS=$(cat pr_info.json | jq -r '.labels[]?.name // empty' | tr '\n' ',' | sed 's/,$//')
-
-            echo "Debug: Found labels: $${LABELS}"
-
-            if [[ $${LABELS} == *"semver:major"* ]]; then
-              echo "major" > version_type.txt
-            elif [[ $${LABELS} == *"semver:minor"* ]]; then
-              echo "minor" > version_type.txt
-            elif [[ $${LABELS} == *"semver:patch"* ]]; then
-              echo "patch" > version_type.txt
-            else
-              echo "timestamp" > version_type.txt
-            fi
-          else
-            echo "No PR number found, using timestamp"
-            echo "timestamp" > version_type.txt
-          fi
-
-          echo "Debug: Final version type: $(cat version_type.txt)"
-        else
-          # Original PR label processing
-          if [ -z "$_PR_TYPE" ] || [ "$_PR_TYPE" = "[]" ]; then
-            echo "Debug: No labels found, using timestamp"
-            echo "timestamp" > version_type.txt
-          else
-            LABEL=$(echo "$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ' | sed 's/semver://')
-            echo "$${LABEL}" > version_type.txt
-          fi
-        fi
-
-        echo "Debug: Final version_type: $(cat version_type.txt)"
-
-  # Bump version based on PR label or use timestamp
-  - name: 'python:3.9'
-    entrypoint: 'python'
-    args:
-      - '-c'
-      - |
-        import os
-        import re
-        from datetime import datetime
-
-        def bump_version(current, bump_type):
-            print(f"Debug: Processing bump_type: {bump_type}")
-            # Remove 'v' prefix if present
-            current = current.lstrip('v')
-
-            # If PR_TYPE is timestamp, use current version with timestamp
-            if bump_type.lower().strip() == 'timestamp':
-                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-                return f"v{current}-{timestamp}"
-
-            # Regular semantic version bumping
-            major, minor, patch = map(int, current.split('.'))
-            bump_type = bump_type.lower().strip()
-            print(f"Debug: Cleaned bump_type: {bump_type}")
-
-            if bump_type == 'major':
-                major += 1
-                minor = 0
-                patch = 0
-            elif bump_type == 'minor':
-                minor += 1
-                patch = 0
-            elif bump_type == 'patch':
-                patch += 1
-            else:
-                print(f"Debug: Unrecognized bump_type, defaulting to timestamp")
-                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-                return f"v{current}-{timestamp}"
-
-            return f"v{major}.{minor}.{patch}"
-
-        # Read current version
-        with open('current_version.txt', 'r') as f:
-            current_version = f.read().strip()
-        print(f"Debug: Current version: {current_version}")
-
-        # Read version type from file
-        with open('version_type.txt', 'r') as f:
-            bump_type = f.read().strip()
-        print(f"Debug: Read bump_type from file: {bump_type}")
-
-        # Calculate new version
-        new_version = bump_version(current_version, bump_type)
-
-        # Save new version
-        with open('new_version.txt', 'w') as f:
-            f.write(new_version)
-
-        # Save whether this is a semantic version for later use
-        is_semantic = bump_type.lower().strip() in ['major', 'minor', 'patch']
-        with open('is_semantic.txt', 'w') as f:
-            f.write(str(is_semantic).lower())
-
-        print(f"Debug: is_semantic: {is_semantic}")
-        print(f"Version update: {current_version} -> {new_version}")
+    id: 'bump-version'
+    waitFor: ['get-version']
 
   # Install dependencies
   - name: 'node:18'
     entrypoint: npm
     args: ['install']
+    id: 'install'
+    waitFor: ['bump-version']
 
   # Build the Vite app
   - name: 'node:18'
     entrypoint: npm
     args: ['run', 'build']
+    id: 'build'
+    waitFor: ['install']
 
   # Create tar archive of dist directory
   - name: 'ubuntu'
     args: ['tar', '-czf', 'release.tar.gz', '-C', 'dist', '.']
+    id: 'create-tar'
+    waitFor: ['build']
 
-  # Create GitHub release with new version
-  - name: 'gcr.io/cloud-builders/curl'
+  # Add this to see what files are created
+  - name: 'ubuntu'
     entrypoint: 'bash'
-    secretEnv: ['GITHUB_TOKEN']
     args:
       - '-c'
       - |
-        # Install curl and jq
-        apt-get update && apt-get install -y jq
+        echo "Files after bump-version:"
+        ls -la
+        echo "Content of new_version.txt (if exists):"
+        find / -name new_version.txt 2>/dev/null || echo "File not found"
+    waitFor: ['create-tar']
 
-        NEW_VERSION=$(cat new_version.txt)
-        IS_SEMANTIC=$(cat is_semantic.txt)
-
-        # Set draft status based on whether this is a semantic version
-        if [ "$_IS_MERGE" = "true" ]; then
-          DRAFT="false"
+  # Create GitHub release
+  - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Current directory: $(pwd)"
+        echo "Files in directory:"
+        ls -la
+        echo "Content of new_version.txt:"
+        cat new_version.txt
+        VERSION=$(cat new_version.txt)
+        if [[ "${_IS_MERGE}" != "true" ]]; then
+          python /usr/local/bin/cli.py \
+            --action create-release \
+            --repo-owner ${_REPO_OWNER} \
+            --repo-name portfolio-web \
+            --current-version "$${VERSION}" \
+            --is-draft
         else
-          DRAFT="true"
+          python /usr/local/bin/cli.py \
+            --action create-release \
+            --repo-owner ${_REPO_OWNER} \
+            --repo-name portfolio-web \
+            --current-version "$${VERSION}"
         fi
-
-        curl -X POST \
-          -H "Authorization: token $$GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Content-Type: application/json" \
-          https://api.github.com/repos/ranson21/portfolio-web/releases \
-          -d '{
-            "tag_name": "'$${NEW_VERSION}'",
-            "name": "Release '$${NEW_VERSION}'",
-            "body": "Release version '$${NEW_VERSION}'",
-            "draft": '$${DRAFT}',
-            "prerelease": false
-          }' > release.json
-
-        # Extract release id
-        RELEASE_ID=$(cat release.json | jq .id)
-
-        # Upload asset
-        curl -X POST \
-          -H "Authorization: token $$GITHUB_TOKEN" \
-          -H "Content-Type: application/gzip" \
-          -H "Accept: application/vnd.github.v3+json" \
-          --data-binary @release.tar.gz \
-          "https://uploads.github.com/repos/ranson21/portfolio-web/releases/$${RELEASE_ID}/assets?name=release.tar.gz"
-
-  # Update parent repo submodule and create PR
-  - name: 'gcr.io/cloud-builders/git'
-    entrypoint: 'bash'
     secretEnv: ['GITHUB_TOKEN']
+    id: 'create-release'
+    waitFor: ['create-tar']
+
+  # Update parent repo submodule
+  - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
     args:
-      - '-c'
-      - |
-        # Only run this step if IS_MERGE is true
-        if [ "$_IS_MERGE" != "true" ]; then
-          echo "Skipping submodule update as this is not a merge to main"
-          exit 0
-        fi
-
-        # Install necessary tools
-        apt-get update && apt-get install -y curl jq
-
-        # Clone the parent repository
-        git clone https://oauth2:$$GITHUB_TOKEN@github.com/$_REPO_OWNER/portfolio.git parent-repo
-        cd parent-repo
-
-        # Configure Git
-        git config user.email "cloudbuild@example.com"
-        git config user.name "Cloud Build"
-
-        # Configure Git to replace SSH URLs with HTTPS
-        git config --global url."https://oauth2:$$GITHUB_TOKEN@github.com/".insteadOf "git@github.com:"
-
-        # Initialize and update submodules
-        git submodule init apps/web/portfolio
-        git submodule update apps/web/portfolio
-
-        # Get the new version
-        NEW_VERSION=$(cat ../new_version.txt)
-
-        # Create a new branch
-        BRANCH_NAME="update-portfolio-web-$${NEW_VERSION}"
-        git checkout -b $${BRANCH_NAME}
-
-        # Update the submodule
-        cd apps/web/portfolio
-        OLD_COMMIT=$(git rev-parse HEAD)
-        git fetch origin
-        git checkout master
-        git pull
-
-        # Get the new commit hash
-        NEW_COMMIT=$(git rev-parse HEAD)
-
-        # Commit the changes
-        cd ../../..
-        git add apps/web/portfolio
-        git commit -m "chore: update portfolio-web submodule to $${NEW_VERSION}"
-
-        # Push the branch
-        git push origin $${BRANCH_NAME}
-
-        # Create PR and capture the response
-        PR_RESPONSE=$(curl -X POST \
-          -H "Authorization: token $$GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Content-Type: application/json" \
-          https://api.github.com/repos/$_REPO_OWNER/portfolio/pulls \
-          -d '{
-            "title": "Update portfolio-web submodule to '"$${NEW_VERSION}"'",
-            "body": "This PR updates the portfolio-web submodule from commit `'"$${OLD_COMMIT}"'` to `'"$${NEW_COMMIT}"'`\n\nVersion: '"$${NEW_VERSION}"'",
-            "head": "'"$${BRANCH_NAME}"'",
-            "base": "master"
-          }')
-
-        # Extract PR number
-        PR_NUMBER=$(echo $${PR_RESPONSE} | jq -r '.number')
-
-        if [ -z "$${PR_NUMBER}" ] || [ "$${PR_NUMBER}" = "null" ]; then
-          echo "Failed to create PR"
-          echo "API Response: $${PR_RESPONSE}"
-          exit 1
-        fi
-
-        echo "Created PR #$${PR_NUMBER}"
-
-        # Merge the PR
-        curl -X PUT \
-          -H "Authorization: token $$GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Content-Type: application/json" \
-          https://api.github.com/repos/$_REPO_OWNER/portfolio/pulls/$${PR_NUMBER}/merge \
-          -d '{
-            "merge_method": "squash",
-            "commit_title": "chore: update portfolio-web submodule to '"$${NEW_VERSION}"'",
-            "commit_message": "Auto-merged submodule update"
-          }'
+      [
+        '--action',
+        'update-submodule',
+        '--repo-owner',
+        '${_REPO_OWNER}',
+        '--repo-name',
+        'portfolio-web',
+        '--parent-repo',
+        'portfolio',
+        '--submodule-path',
+        'apps/web/portfolio',
+        '--current-version',
+        '$$(cat new_version.txt)',
+        '--is-merge',
+        '${_IS_MERGE}',
+      ]
+    secretEnv: ['GITHUB_TOKEN']
+    id: 'update-submodule'
+    waitFor: ['create-release']
 
 availableSecrets:
   secretManager:
@@ -302,4 +115,6 @@ availableSecrets:
       env: 'GITHUB_TOKEN'
 
 substitutions:
-  _PR_TYPE: '' # This will now be populated by the PR label if it exists
+  _PR_TYPE: '' # Populated by the PR label if it exists
+  _REPO_OWNER: ''
+  _IS_MERGE: 'false'
