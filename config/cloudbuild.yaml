@@ -40,18 +40,12 @@ steps:
 
   # Create GitHub release
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
+    # Use a shell script to conditionally include --is-draft
+    entrypoint: 'bash'
     args:
       [
-        '--action',
-        'create-release',
-        '--repo-owner',
-        '${_REPO_OWNER}',
-        '--repo-name',
-        'portfolio-web',
-        '--current-version',
-        '$$(cat new_version.txt)',
-        '--is-draft',
-        '$${_IS_MERGE:-true}',
+        '-c',
+        'if [[ "${_IS_MERGE}" != "true" ]]; then DRAFT_ARG="--is-draft"; fi && python /usr/local/bin/cli.py --action create-release --repo-owner ${_REPO_OWNER} --repo-name portfolio-web --current-version $$(cat new_version.txt) $$DRAFT_ARG',
       ]
     secretEnv: ['GITHUB_TOKEN']
     id: 'create-release'
