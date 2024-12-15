@@ -34,29 +34,29 @@ steps:
           MERGE_MSG=$(git log -1 --pretty=%B)
           # Extract PR number from merge commit message (format: Merge pull request #XX)
           PR_NUMBER=$(echo "$${MERGE_MSG}" | grep -o '#[0-9]\+' | tr -d '#')
-          
+
           if [ ! -z "$${PR_NUMBER}" ]; then
             echo "Found PR number: $${PR_NUMBER}"
-            
+
             # Fetch PR labels using GitHub API (including closed PRs)
             curl -s -H "Authorization: token $$GITHUB_TOKEN" \
               -H "Accept: application/vnd.github.v3+json" \
               "https://api.github.com/repos/$_REPO_OWNER/portfolio-web/pulls/$${PR_NUMBER}?state=all" > pr_info.json
-            
+
             # Add debug output
             echo "Debug: PR Info Response:"
             cat pr_info.json
-            
+
             # Extract labels with error handling
             LABELS=$(cat pr_info.json | jq -r '.labels[]?.name // empty' | tr '\n' ',' | sed 's/,$//')
-            
+
             echo "Debug: Found labels: $${LABELS}"
-            
-            if [[ $${LABELS} == *"major"* ]]; then
+
+            if [[ $${LABELS} == *"semver:major"* ]]; then
               echo "major" > version_type.txt
-            elif [[ $${LABELS} == *"minor"* ]]; then
+            elif [[ $${LABELS} == *"semver:minor"* ]]; then
               echo "minor" > version_type.txt
-            elif [[ $${LABELS} == *"patch"* ]]; then
+            elif [[ $${LABELS} == *"semver:patch"* ]]; then
               echo "patch" > version_type.txt
             else
               echo "timestamp" > version_type.txt
@@ -65,7 +65,7 @@ steps:
             echo "No PR number found, using timestamp"
             echo "timestamp" > version_type.txt
           fi
-          
+
           echo "Debug: Final version type: $(cat version_type.txt)"
         else
           # Original PR label processing
@@ -73,7 +73,7 @@ steps:
             echo "Debug: No labels found, using timestamp"
             echo "timestamp" > version_type.txt
           else
-            LABEL=$(echo "$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ')
+            LABEL=$(echo "$_PR_TYPE" | tr -d '[]"' | cut -d',' -f1 | tr -d ' ' | sed 's/semver://')
             echo "$${LABEL}" > version_type.txt
           fi
         fi
@@ -94,17 +94,17 @@ steps:
             print(f"Debug: Processing bump_type: {bump_type}")
             # Remove 'v' prefix if present
             current = current.lstrip('v')
-            
+
             # If PR_TYPE is timestamp, use current version with timestamp
             if bump_type.lower().strip() == 'timestamp':
                 timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
                 return f"v{current}-{timestamp}"
-            
+
             # Regular semantic version bumping
             major, minor, patch = map(int, current.split('.'))
             bump_type = bump_type.lower().strip()
             print(f"Debug: Cleaned bump_type: {bump_type}")
-            
+
             if bump_type == 'major':
                 major += 1
                 minor = 0
@@ -118,7 +118,7 @@ steps:
                 print(f"Debug: Unrecognized bump_type, defaulting to timestamp")
                 timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
                 return f"v{current}-{timestamp}"
-                
+
             return f"v{major}.{minor}.{patch}"
 
         # Read current version
@@ -137,7 +137,7 @@ steps:
         # Save new version
         with open('new_version.txt', 'w') as f:
             f.write(new_version)
-            
+
         # Save whether this is a semantic version for later use
         is_semantic = bump_type.lower().strip() in ['major', 'minor', 'patch']
         with open('is_semantic.txt', 'w') as f:
