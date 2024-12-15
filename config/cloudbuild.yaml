@@ -2,10 +2,14 @@ steps:
   # Get latest version
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
     args:
-      - '--action=get-version'
-      - '--github-token=$$GITHUB_TOKEN'
-      - '--repo-owner=${_REPO_OWNER}'
-      - '--repo-name=portfolio-web'
+      - '--action'
+      - 'get-version'
+      - '--github-token'
+      - '$$GITHUB_TOKEN'
+      - '--repo-owner'
+      - '${_REPO_OWNER}'
+      - '--repo-name'
+      - 'portfolio-web'
     secretEnv: ['GITHUB_TOKEN']
     entrypoint: 'python'
     env:
@@ -15,12 +19,18 @@ steps:
   # Process PR info and bump version
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
     args:
-      - '--action=bump-version'
-      - '--github-token=$$GITHUB_TOKEN'
-      - '--repo-owner=${_REPO_OWNER}'
-      - '--repo-name=portfolio-web'
-      - '--current-version=$$(cat current_version.txt)'
-      - '--version-type=$${_PR_TYPE:-timestamp}'
+      - '--action'
+      - 'bump-version'
+      - '--github-token'
+      - '$$GITHUB_TOKEN'
+      - '--repo-owner'
+      - '${_REPO_OWNER}'
+      - '--repo-name'
+      - 'portfolio-web'
+      - '--current-version'
+      - '$$(cat current_version.txt)'
+      - '--version-type'
+      - '$${_PR_TYPE:-timestamp}'
     secretEnv: ['GITHUB_TOKEN']
     entrypoint: 'python'
     env:
@@ -44,12 +54,18 @@ steps:
   # Create GitHub release
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
     args:
-      - '--action=create-release'
-      - '--github-token=$$GITHUB_TOKEN'
-      - '--repo-owner=${_REPO_OWNER}'
-      - '--repo-name=portfolio-web'
-      - '--current-version=$$(cat new_version.txt)'
-      - '--is-draft=$${_IS_MERGE:-true}'
+      - '--action'
+      - 'create-release'
+      - '--github-token'
+      - '$$GITHUB_TOKEN'
+      - '--repo-owner'
+      - '${_REPO_OWNER}'
+      - '--repo-name'
+      - 'portfolio-web'
+      - '--current-version'
+      - '$$(cat new_version.txt)'
+      - '--is-draft'
+      - '$${_IS_MERGE:-true}'
     secretEnv: ['GITHUB_TOKEN']
     entrypoint: 'python'
     env:
@@ -59,13 +75,20 @@ steps:
   # Update parent repo submodule
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
     args:
-      - '--action=update-submodule'
-      - '--github-token=$$GITHUB_TOKEN'
-      - '--repo-owner=${_REPO_OWNER}'
-      - '--repo-name=portfolio-web'
-      - '--parent-repo=portfolio'
-      - '--submodule-path=apps/web/portfolio'
-      - '--current-version=$$(cat new_version.txt)'
+      - '--action'
+      - 'update-submodule'
+      - '--github-token'
+      - '$$GITHUB_TOKEN'
+      - '--repo-owner'
+      - '${_REPO_OWNER}'
+      - '--repo-name'
+      - 'portfolio-web'
+      - '--parent-repo'
+      - 'portfolio'
+      - '--submodule-path'
+      - 'apps/web/portfolio'
+      - '--current-version'
+      - '$$(cat new_version.txt)'
     secretEnv: ['GITHUB_TOKEN']
     entrypoint: 'python'
     env:
