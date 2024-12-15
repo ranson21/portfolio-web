@@ -97,7 +97,7 @@ steps:
         '--current-version',
         '$$(cat new_version.txt)',
         '--is-merge',
-        '$${_IS_MERGE}',
+        '${_IS_MERGE}',
       ]
     secretEnv: ['GITHUB_TOKEN']
     id: 'update-submodule'
