@@ -55,14 +55,14 @@ steps:
             --action create-release \
             --repo-owner ${_REPO_OWNER} \
             --repo-name portfolio-web \
-            --current-version "${VERSION}" \
+            --current-version "$${VERSION}" \
             --is-draft
         else
           python /usr/local/bin/cli.py \
             --action create-release \
             --repo-owner ${_REPO_OWNER} \
             --repo-name portfolio-web \
-            --current-version "${VERSION}"
+            --current-version "$${VERSION}"
         fi
     secretEnv: ['GITHUB_TOKEN']
     id: 'create-release'
