@@ -14,12 +14,18 @@ steps:
         echo "Debug environment variables:"
         echo "PR_TYPE value (should be commit SHA): ${_PR_TYPE}"
         echo "IS_MERGE value: ${_IS_MERGE}"
+
+        VERSION_TYPE="${_PR_TYPE}"
+        if [ -z "${_PR_TYPE}" ]; then
+          VERSION_TYPE="timestamp"
+        fi
+
         python /usr/local/bin/cli.py \
           --action bump-version \
           --repo-owner ${_REPO_OWNER} \
           --repo-name portfolio-web \
           --current-version "$$(cat current_version.txt)" \
-          --version-type "${_PR_TYPE:-timestamp}" \
+          --version-type "$${VERSION_TYPE}" \
           --is-merge "${_IS_MERGE}" \
           --pr-number "${_PR_NUMBER}"
     secretEnv: ['GITHUB_TOKEN']
