@@ -83,8 +83,7 @@ steps:
         echo "Current directory: $(pwd)"
         echo "Files in directory:"
         ls -la
-        echo "Content of new_version.txt:"
-        cat new_version.txt
+        echo "Content of new_version.txt: $(cat new_version.txt)"
         VERSION=$(cat new_version.txt)
         if [[ "${_IS_MERGE}" != "true" ]]; then
           python /usr/local/bin/cli.py \
