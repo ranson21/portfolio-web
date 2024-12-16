@@ -11,6 +11,10 @@ steps:
     args:
       - '-c'
       - |
+        echo "Debug environment variables:"
+        echo "COMMIT_SHA: $$COMMIT_SHA"
+        echo "_PR_TYPE: ${_PR_TYPE}"
+        echo "_IS_MERGE: ${_IS_MERGE}"
         python /usr/local/bin/cli.py \
           --action bump-version \
           --repo-owner ${_REPO_OWNER} \
