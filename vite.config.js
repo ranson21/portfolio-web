@@ -55,4 +55,7 @@ export default defineConfig({
       { find: '@utils', replacement: fileURLToPath(new URL('./src/utils', import.meta.url)) },
     ],
   },
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.APP_VERSION || 'development'),
+  },
 });
