@@ -12,10 +12,8 @@ steps:
       - '-c'
       - |
         echo "Debug environment variables:"
-        echo "COMMIT_SHA: $COMMIT_SHA"
-        echo "Built-in commit_sha: $(commit_sha)"
-        echo "_PR_TYPE: ${_PR_TYPE}"
-        echo "_IS_MERGE: ${_IS_MERGE}"
+        echo "PR_TYPE value (should be commit SHA): ${_PR_TYPE}"
+        echo "IS_MERGE value: ${_IS_MERGE}"
         python /usr/local/bin/cli.py \
           --action bump-version \
           --repo-owner ${_REPO_OWNER} \
