@@ -20,6 +20,7 @@ steps:
           --repo-name portfolio-web \
           --current-version "$$(cat current_version.txt)" \
           --version-type "${_PR_TYPE:-timestamp}" \
+          --is-merge "${_IS_MERGE}" \
           --pr-number "${_PR_NUMBER}"
     secretEnv: ['GITHUB_TOKEN']
     id: 'bump-version'
