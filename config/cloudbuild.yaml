@@ -32,6 +32,16 @@ steps:
     id: 'bump-version'
     waitFor: ['get-version']
 
+  # Export version to environment
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "export const APP_VERSION = '$(cat new_version.txt)'" > src/version.js
+    id: 'export-version'
+    waitFor: ['bump-version']
+
   # Install dependencies
   - name: 'node:18'
     entrypoint: npm
