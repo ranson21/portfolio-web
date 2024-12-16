@@ -7,7 +7,7 @@ export const Copyright = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {APP_VERSION}
-      {'Copyright © '}
+      {' Copyright © '}
       <Link color="inherit" href="#/">
         Abby Ranson
       </Link>{' '}
