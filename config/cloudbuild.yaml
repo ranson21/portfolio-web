@@ -18,7 +18,7 @@ steps:
         '--current-version',
         '$$(cat current_version.txt)',
         '--version-type',
-        '${_PR_TYPE:-timestamp}',
+        '$${_PR_TYPE:-timestamp}',
       ]
     secretEnv: ['GITHUB_TOKEN']
     id: 'bump-version'
