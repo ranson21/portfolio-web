@@ -7,7 +7,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { ChevronRight, GitHub, LinkedIn, Mail } from '@mui/icons-material';
 import { InView } from 'react-intersection-observer';
 
-import { APP_VERSION } from '@/version';
 import themeData from '@/styles/theme';
 import { AppBar } from '@components/AppBar';
 import { Copyright } from '@components/Copyright';
@@ -110,7 +109,6 @@ function App(props) {
       <footer>
         <Grid container justifyContent="center" spacing={1} sx={{ background: '#0F0C2A' }}>
           <Grid item xs={12}>
-            {APP_VERSION}
             <Copyright />
           </Grid>
           <Grid item sx={{ marginBottom: 3, display: 'flex' }}>
