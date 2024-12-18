@@ -73,7 +73,6 @@ steps:
         echo "Content of new_version.txt (if exists):"
         find / -name new_version.txt 2>/dev/null || echo "File not found"
     waitFor: ['create-tar']
-    id: 'debug'
 
   # Create GitHub release
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
@@ -124,30 +123,6 @@ steps:
     id: 'update-submodule'
     waitFor: ['create-release']
 
-# Add status checks configuration
-options:
-  commentControl: COMMENTS_ENABLED_FOR_EXTERNAL_CONTRIBUTORS_ONLY
-  statusCheckOptions:
-    checks:
-      - context: 'Get Version'
-        stepId: 'get-version'
-      - context: 'Version Bump'
-        stepId: 'bump-version'
-      - context: 'Export Version'
-        stepId: 'export-version'
-      - context: 'Dependencies'
-        stepId: 'install'
-      - context: 'Build'
-        stepId: 'build'
-      - context: 'Create Archive'
-        stepId: 'create-tar'
-      - context: 'Debug Check'
-        stepId: 'debug'
-      - context: 'GitHub Release'
-        stepId: 'create-release'
-      - context: 'Update Submodule'
-        stepId: 'update-submodule'
-
 availableSecrets:
   secretManager:
     - versionName: projects/$PROJECT_ID/secrets/github_token/versions/latest
@@ -157,4 +132,4 @@ substitutions:
   _PR_TYPE: '' # Populated by the PR label if it exists
   _REPO_OWNER: ''
   _IS_MERGE: 'false'
-  _PR_NUMBER: ''
+  _PR_NUMBER: '' # Add this line to your substitutions
