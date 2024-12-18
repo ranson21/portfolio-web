@@ -4,6 +4,9 @@ steps:
     args: ['--action', 'get-version', '--repo-owner', '${_REPO_OWNER}', '--repo-name', 'portfolio-web']
     secretEnv: ['GITHUB_TOKEN']
     id: 'get-version'
+    github:
+      name: 'Get Latest Version'
+      status: 'pending'
 
   # Process PR info and bump version
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
@@ -31,6 +34,9 @@ steps:
     secretEnv: ['GITHUB_TOKEN']
     id: 'bump-version'
     waitFor: ['get-version']
+    github:
+      name: 'Bump Version'
+      status: 'pending'
 
   # Export version to environment
   - name: 'ubuntu'
@@ -41,6 +47,9 @@ steps:
         echo "export const APP_VERSION = '$(cat new_version.txt)'" > src/version.js
     id: 'export-version'
     waitFor: ['bump-version']
+    github:
+      name: 'Export Version'
+      status: 'pending'
 
   # Install dependencies
   - name: 'node:18'
@@ -48,6 +57,9 @@ steps:
     args: ['install']
     id: 'install'
     waitFor: ['bump-version']
+    github:
+      name: 'Install Dependencies'
+      status: 'pending'
 
   # Build the Vite app
   - name: 'node:18'
@@ -55,14 +67,20 @@ steps:
     args: ['run', 'build']
     id: 'build'
     waitFor: ['install']
+    github:
+      name: 'Build Vite App'
+      status: 'pending'
 
   # Create tar archive of dist directory
   - name: 'ubuntu'
     args: ['tar', '-czf', 'release.tar.gz', '-C', 'dist', '.']
     id: 'create-tar'
     waitFor: ['build']
+    github:
+      name: 'Create Release Archive'
+      status: 'pending'
 
-  # Add this to see what files are created
+  # Debug step
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
@@ -73,6 +91,10 @@ steps:
         echo "Content of new_version.txt (if exists):"
         find / -name new_version.txt 2>/dev/null || echo "File not found"
     waitFor: ['create-tar']
+    id: 'debug'
+    github:
+      name: 'Debug Check'
+      status: 'pending'
 
   # Create GitHub release
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
@@ -99,6 +121,9 @@ steps:
     secretEnv: ['GITHUB_TOKEN']
     id: 'create-release'
     waitFor: ['create-tar']
+    github:
+      name: 'Create GitHub Release'
+      status: 'pending'
 
   # Update parent repo submodule
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
@@ -122,6 +147,30 @@ steps:
     secretEnv: ['GITHUB_TOKEN']
     id: 'update-submodule'
     waitFor: ['create-release']
+    github:
+      name: 'Update Parent Repo Submodule'
+      status: 'pending'
+
+options:
+  status:
+    - context: 'Get Latest Version'
+      id: 'get-version'
+    - context: 'Bump Version'
+      id: 'bump-version'
+    - context: 'Export Version'
+      id: 'export-version'
+    - context: 'Install Dependencies'
+      id: 'install'
+    - context: 'Build Vite App'
+      id: 'build'
+    - context: 'Create Release Archive'
+      id: 'create-tar'
+    - context: 'Debug Check'
+      id: 'debug'
+    - context: 'Create GitHub Release'
+      id: 'create-release'
+    - context: 'Update Parent Repo Submodule'
+      id: 'update-submodule'
 
 availableSecrets:
   secretManager:
@@ -132,4 +181,4 @@ substitutions:
   _PR_TYPE: '' # Populated by the PR label if it exists
   _REPO_OWNER: ''
   _IS_MERGE: 'false'
-  _PR_NUMBER: '' # Add this line to your substitutions
+  _PR_NUMBER: ''
