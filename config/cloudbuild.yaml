@@ -1,7 +1,7 @@
 steps:
   # Get latest version
   - name: 'us-central1-docker.pkg.dev/abby-ranson/docker/github-ops-builder'
-    args: ['--action', 'get-version', '--repo-owner', '${_REPO_OWNER}', '--repo-name', 'portfolio-web']
+    args: ['get-version', '${_REPO_OWNER}', '${_REPO}']
     secretEnv: ['GITHUB_TOKEN']
     id: 'get-version'
 
@@ -53,6 +53,7 @@ steps:
   - name: 'node:18'
     entrypoint: npm
     args: ['run', 'build']
+    env: ['VITE_APP_API=https://us-central1-abby-ranson.cloudfunctions.net/contact-me']
     id: 'build'
     waitFor: ['install']
 
@@ -131,5 +132,6 @@ availableSecrets:
 substitutions:
   _PR_TYPE: '' # Populated by the PR label if it exists
   _REPO_OWNER: ''
+  _REPO: 'portfolio-web'
   _IS_MERGE: 'false'
   _PR_NUMBER: '' # Add this line to your substitutions

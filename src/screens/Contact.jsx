@@ -84,7 +84,7 @@ export const Contact = props => {
       setValidating(true);
       setFormError('');
 
-      const response = await fetch('/api/contact', {
+      const response = await fetch(import.meta.env.VITE_APP_API, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
