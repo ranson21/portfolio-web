@@ -126,7 +126,6 @@ portfolio-web/
 │   ├── components/     # React components
 │   ├── styles/        # SASS/CSS styles
 │   ├── utils/         # Utility functions
-│   ├── config/        # Configuration files (Firebase, etc.)
 │   └── index.jsx      # Application entry point
 ├── public/            # Static assets
 └── vite.config.js     # Vite configuration
