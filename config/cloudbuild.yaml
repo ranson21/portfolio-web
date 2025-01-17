@@ -98,5 +98,5 @@ substitutions:
   _IS_MERGE: 'false'
   _PR_NUMBER: '' # Add this line to your substitutions
   _PARENT_REPO: 'portfolio' # Parent repository name
-  _SUBMODULE_PATH: 'apps/web/portfolio-web' # Path to submodule in parent repo
+  _SUBMODULE_PATH: 'apps/web/portfolio' # Path to submodule in parent repo
 
