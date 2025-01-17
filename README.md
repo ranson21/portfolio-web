@@ -18,11 +18,63 @@ A modern, responsive portfolio web application built with React and Vite, featur
 - Development proxy configuration
 - Asset optimization and caching
 - Module aliasing for clean imports
+- Firebase integration for hosting and CI/CD
 
 ## 📦 Prerequisites
 
 - Node.js (LTS version recommended)
 - npm or yarn package manager
+- Firebase CLI (`npm install -g firebase-tools`)
+- Google Cloud account (for Firebase)
+
+## 🔥 Firebase Setup
+
+### Initial Project Setup
+
+1. Create a new Firebase project:
+   ```bash
+   # Login to Firebase
+   firebase login
+
+   # Initialize Firebase in your project
+   firebase init
+   ```
+
+2. Select the following Firebase features when prompted:
+   - Hosting
+   - GitHub Actions deployment (optional)
+   - Emulators (optional)
+
+### Setting up Continuous Integration
+
+1. Generate a Firebase CI token:
+   ```bash
+   firebase login:ci
+   ```
+
+2. Add the token to your GitHub repository:
+   - Go to Repository Settings > Secrets
+   - Create a new secret named `FIREBASE_TOKEN`
+   - Paste the CI token as the value
+
+3. The `.github/workflows/firebase-hosting-merge.yml` file will be automatically created during Firebase init. Ensure it contains:
+   ```yaml
+   name: Deploy to Firebase Hosting
+   on:
+     push:
+       branches: [ main ]
+   jobs:
+     build_and_deploy:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v3
+         - run: npm ci && npm run build
+         - uses: FirebaseExtended/action-hosting-deploy@v0
+           with:
+             repoToken: '${{ secrets.GITHUB_TOKEN }}'
+             firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
+             channelId: live
+   ```
 
 ## 🛠️ Installation
 
@@ -87,6 +139,8 @@ Create a `.env` file in the root directory:
 
 ```env
 APP_VERSION=development
+FIREBASE_API_KEY=your_api_key
+FIREBASE_PROJECT_ID=your_project_id
 ```
 
 ### Proxy Configuration
@@ -125,3 +179,4 @@ Abigail Ranson
 - React team for the amazing framework
 - Vite team for the lightning-fast build tool
 - Material-UI team for the component library
+- Firebase team for the hosting and CI/CD platform
