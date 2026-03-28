@@ -6,13 +6,13 @@ import { useTheme } from '@mui/material/styles';
 
 // Style dependencies
 import { line } from '@styles';
+import { heroContent } from '@/content/portfolioContent';
 
 /**
  * Dashboard Screen Component
  */
 export const Home = props => {
   const theme = useTheme();
-  const specialties = ['Principal Engineering', 'Architecture', 'Platform Strategy', 'Hands-On Delivery'];
 
   return (
     <Box
@@ -135,7 +135,7 @@ export const Home = props => {
         <Grid item xs={12} md={7}>
           <Stack spacing={3}>
             <Typography sx={{ fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'secondary.main' }}>
-              Abigail Ranson
+              {heroContent.name}
             </Typography>
             <Typography
               component="h1"
@@ -145,18 +145,17 @@ export const Home = props => {
                 maxWidth: '10ch',
               }}
             >
-              Principal engineering with architecture depth.
+              {heroContent.headline}
             </Typography>
             <div>
               <span style={{ ...line(theme), marginTop: '1.2rem' }}></span>
               <span style={{ ...line(theme), marginLeft: '3.2rem' }}></span>
             </div>
             <Typography sx={{ maxWidth: 620, color: 'text.secondary', fontSize: { xs: '1.05rem', md: '1.2rem' }, lineHeight: 1.75 }}>
-              I have worked as a software engineer since 2016, following earlier systems administration experience. Today I help teams
-              shape architecture, modernize platforms, and still stay close to the code where execution quality matters.
+              {heroContent.summary}
             </Typography>
             <Stack direction="row" spacing={1.2} flexWrap="wrap" useFlexGap>
-              {specialties.map(item => (
+              {heroContent.specialties.map(item => (
                 <Chip
                   key={item}
                   label={item}
@@ -229,21 +228,16 @@ export const Home = props => {
               <Stack direction="row" spacing={2} alignItems="center">
                 <Avatar src="img/profile_pic.png" alt="Abigail Ranson" sx={{ width: 72, height: 72 }} />
                 <Box>
-                  <Typography variant="h6">Abby Ranson</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>Principal engineer and architect</Typography>
+                  <Typography variant="h6">{heroContent.profileTitle}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{heroContent.profileSubtitle}</Typography>
                 </Box>
               </Stack>
               <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
-                Focused on platform reliability, cloud architecture, developer experience, delivery systems, and application design for teams
-                that need scalable systems without losing operational clarity.
+                {heroContent.profileSummary}
               </Typography>
               <Grid container spacing={2}>
-                {[
-                  ['Principal-level', 'technical leadership with hands-on execution'],
-                  ['Platform + product', 'architecture spanning systems and application delivery'],
-                  ['Production-minded', 'operability, reliability, and developer experience'],
-                ].map(([title, subtitle]) => (
-                  <Grid item xs={12} sm={4} md={12} key={title}>
+                {heroContent.employerSignals.map(item => (
+                  <Grid item xs={12} sm={4} md={12} key={item.title}>
                     <Paper
                       elevation={0}
                       sx={{
@@ -252,8 +246,8 @@ export const Home = props => {
                         backgroundColor: 'rgba(9, 12, 18, 0.82)',
                       }}
                     >
-                      <Typography sx={{ fontSize: '1.5rem', fontWeight: 700 }}>{title}</Typography>
-                      <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>{subtitle}</Typography>
+                      <Typography sx={{ fontSize: '1.5rem', fontWeight: 700 }}>{item.title}</Typography>
+                      <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>{item.subtitle}</Typography>
                     </Paper>
                   </Grid>
                 ))}

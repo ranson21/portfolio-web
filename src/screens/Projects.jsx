@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 // Style dependencies
 import { line } from '@styles';
 import { ChevronRight, OpenInNew } from '@mui/icons-material';
+import { projectContent } from '@/content/portfolioContent';
 
 // Create the dashboard screen styles
 
@@ -22,26 +23,6 @@ const Article = styled(Grid, {})(({ theme }) => ({
 export const Projects = props => {
   // Create the styles for this screen
   const theme = useTheme();
-  const projects = [
-    {
-      title: 'Portfolio Web',
-      summary: 'This site refactor: cleaner design system, stronger content architecture, and a more maintainable React shell.',
-      cta: 'View source',
-      href: 'https://github.com/ranson21?tab=repositories',
-    },
-    {
-      title: 'Cloud and Platform Work',
-      summary: 'Infrastructure modules, CI/CD pipelines, cloud deployment workflows, and tooling that reduce operational friction.',
-      cta: 'Request demo',
-      href: '#Contact',
-    },
-    {
-      title: 'Product-Focused Internal Tools',
-      summary: 'Full-stack applications designed to improve visibility, reduce manual steps, and support teams doing real work.',
-      cta: 'Start a conversation',
-      href: '#Contact',
-    },
-  ];
 
   return (
     <Grid
@@ -67,9 +48,17 @@ export const Projects = props => {
           </Grid>
           <Grid item xs={12} sx={{ maxWidth: '500px', marginBottom: 5, marginTop: 2 }}>
             <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem', lineHeight: 1.9 }}>
-              I spend a lot of time building across infrastructure, interfaces, and delivery tooling. Some work is private, but the patterns
-              are consistent: reliability, clarity, and pragmatic systems that stay operable as they grow.
+              {projectContent.intro}
             </Typography>
+          </Grid>
+          <Grid item xs={12} sx={{ maxWidth: '500px', mb: 4 }}>
+            <Stack spacing={1.25}>
+              {projectContent.supportingPoints.map(point => (
+                <Typography key={point} sx={{ color: 'text.primary', fontSize: '0.98rem' }}>
+                  {`• ${point}`}
+                </Typography>
+              ))}
+            </Stack>
           </Grid>
           <Grid item xs={12} sx={{ maxWidth: '500px', display: 'flex', flexWrap: 'wrap', gap: 2 }}>
             <Button
@@ -99,7 +88,7 @@ export const Projects = props => {
       </Article>
       <Grid item xs={12} md={8}>
         <Grid container spacing={2.5}>
-          {projects.map(project => (
+          {projectContent.cards.map(project => (
             <Grid item xs={12} key={project.title}>
               <Card
                 elevation={0}
@@ -110,9 +99,30 @@ export const Projects = props => {
                 }}
               >
                 <CardContent sx={{ p: { xs: 3, md: 4 } }}>
-                  <Stack spacing={2}>
+                  <Stack spacing={2.2}>
+                    <Typography sx={{ color: 'secondary.main', fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+                      {project.eyebrow}
+                    </Typography>
                     <Typography variant="h4">{project.title}</Typography>
                     <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>{project.summary}</Typography>
+                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                      {project.highlights.map(highlight => (
+                        <Typography
+                          key={highlight}
+                          sx={{
+                            px: 1.4,
+                            py: 0.8,
+                            borderRadius: '999px',
+                            fontSize: 13,
+                            color: 'text.primary',
+                            backgroundColor: 'rgba(15, 20, 28, 0.78)',
+                            border: '1px solid rgba(148, 163, 184, 0.12)',
+                          }}
+                        >
+                          {highlight}
+                        </Typography>
+                      ))}
+                    </Stack>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                       <Button
                         variant={project.href.startsWith('http') ? 'contained' : 'outlined'}
@@ -120,6 +130,7 @@ export const Projects = props => {
                         href={project.href}
                         target={project.href.startsWith('http') ? '_blank' : undefined}
                         sx={{ display: 'flex', alignItems: 'center' }}
+                        endIcon={project.href.startsWith('http') ? <OpenInNew /> : <ChevronRight />}
                         onClick={() => {
                           if (project.href === '#Contact') {
                             props.setSelectedPage('Contact');

@@ -66,7 +66,7 @@ function App() {
           containerId: 'Contact',
           containerStyles: {
             background:
-              'linear-gradient(180deg, rgba(15, 20, 28, 0) 0%, rgba(15, 20, 28, 0.34) 100%)',
+              'linear-gradient(180deg, rgba(8, 11, 17, 1) 0%, rgba(6, 9, 14, 1) 100%)',
           },
         },
       },
@@ -113,8 +113,7 @@ function App() {
             spacing={2}
             sx={{
               px: { xs: 3, md: 8 },
-              py: 4,
-              borderTop: '1px solid rgba(148, 163, 184, 0.1)',
+              py: { xs: 2.5, md: 3 },
               backgroundColor: 'rgba(7, 11, 17, 0.72)',
             }}
           >

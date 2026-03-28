@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 import { line } from '@styles';
 import { Text } from '@components/FormControls';
 import { validate } from '@utils/validator';
+import { contactContent } from '@/content/portfolioContent';
 
 // Style dependencies remain the same...
 const Article = styled(Grid, {})(({ theme }) => ({
@@ -32,12 +33,12 @@ const ThankYouMessage = () => (
   <Grid container spacing={3} sx={{ textAlign: 'center' }}>
     <Grid item xs={12}>
       <Typography variant="h2" component="h2" gutterBottom>
-        Thank You
+        {contactContent.thankYouTitle}
       </Typography>
     </Grid>
     <Grid item xs={12}>
       <Typography variant="subtitle1" color="text.secondary">
-        I appreciate you reaching out. I will review your message and respond within 24-48 hours. Thank you for your patience.
+        {contactContent.thankYouBody}
       </Typography>
     </Grid>
   </Grid>
@@ -107,7 +108,18 @@ export const Contact = () => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" sx={{ flex: 1 }} spacing={4}>
+    <Grid
+      container
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+        flex: 1,
+        position: 'relative',
+        pt: { xs: 2, md: 3 },
+        borderTop: '1px solid rgba(148, 163, 184, 0.12)',
+      }}
+      spacing={4}
+    >
       <Article item xs={12} md={6}>
         <Paper elevation={0} sx={{ p: { xs: 3, md: 4 }, borderRadius: '28px', backgroundColor: 'rgba(15, 20, 28, 0.78)' }}>
           <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%', maxWidth: '560px' }}>
@@ -125,7 +137,7 @@ export const Contact = () => {
               </Grid>
               <Grid item xs={12} sx={{ mb: 3 }}>
                 <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
-                  If you need help with a platform problem, product build, or engineering workflow, send a note. I review messages directly.
+                  {contactContent.intro}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -180,7 +192,7 @@ export const Contact = () => {
                             disabled={invalid || submitting || validating}
                             endIcon={submitting || validating ? <CircularProgress size={20} /> : <Send />}
                           >
-                            Send
+                            {contactContent.ctaLabel}
                           </Button>
                         </Grid>
                       </Grid>
@@ -198,11 +210,15 @@ export const Contact = () => {
           <Image src={'img/contact_me.png'} />
           <Paper elevation={0} sx={{ p: 3, borderRadius: '24px', width: '100%', maxWidth: '520px', backgroundColor: 'rgba(15, 20, 28, 0.7)' }}>
             <Typography variant="h6" sx={{ mb: 1 }}>
-              Preferred conversations
+              {contactContent.preferredTitle}
             </Typography>
-            <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
-              Platform modernization, frontend rebuilds, internal tools, delivery workflows, and technical direction for early-stage products.
-            </Typography>
+            <Stack spacing={1.1}>
+              {contactContent.preferredTopics.map(topic => (
+                <Typography key={topic} sx={{ color: 'text.secondary', lineHeight: 1.75 }}>
+                  {`• ${topic}`}
+                </Typography>
+              ))}
+            </Stack>
           </Paper>
         </Stack>
       </Grid>

@@ -59,7 +59,7 @@ export const AppBar = props => {
             <Logo />
             <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection: 'column' }}>
               <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>Abigail Ranson</Typography>
-              <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>Principal engineer, architect, and hands-on builder</Typography>
+              <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>Principal engineer, architect, and hands-on technical leader</Typography>
             </Box>
           </Box>
           <Box
@@ -102,7 +102,7 @@ export const AppBar = props => {
               <Grid item>
                 <Button
                   download
-                  href="docs/2024-12-01-resume.pdf"
+                  href="docs/2026-03-28-resume.pdf"
                   size="small"
                   variant="outlined"
                   color="secondary"
