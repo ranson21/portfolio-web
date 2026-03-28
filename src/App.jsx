@@ -2,9 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-import { Button, Grid, Typography, IconButton, Link } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { ChevronRight, GitHub, LinkedIn, Mail } from '@mui/icons-material';
+import { Box, Grid, Link, Typography } from '@mui/material';
 import { InView } from 'react-intersection-observer';
 
 import themeData from '@/styles/theme';
@@ -16,65 +14,65 @@ import About from './screens/About';
 import Projects from './screens/Projects';
 import Contact from './screens/Contact';
 
-function App(props) {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
+function App() {
   const [selectedNav, setSelected] = useState('Home');
   const [navClicked, setNavClicked] = useState(false);
 
   // Define the screens for the App
   const screens = [
     {
-      label: 'Home',
-      Component: Home,
-      props: {
-        containerId: 'Home',
-        containerStyles: { backgroundImage: 'linear-gradient(to right, #0f0c29, #302b63, #24243e)' },
-        wrapperStyles: { justifyContent: 'center' },
+        label: 'Home',
+        Component: Home,
+        props: {
+          containerId: 'Home',
+          containerStyles: {
+            background:
+              'radial-gradient(circle at 10% 10%, rgba(148, 163, 184, 0.1), transparent 28%), radial-gradient(circle at 90% 20%, rgba(71, 85, 105, 0.14), transparent 24%)',
+          },
+          wrapperStyles: { justifyContent: 'center' },
+        },
       },
-    },
     {
       label: 'About',
       Component: About,
-      props: {
-        containerId: 'About',
-        containerStyles: {
-          position: 'relative',
-          zIndex: 1000,
-          backgroundImage: 'url("img/wave.svg")',
-          backgroundSize: 'cover',
+        props: {
+          containerId: 'About',
+          containerStyles: {
+            position: 'relative',
+            background:
+              'linear-gradient(180deg, rgba(15, 20, 28, 0.42) 0%, rgba(7, 11, 17, 0) 100%)',
+          },
         },
       },
-    },
     {
       label: 'Projects',
       Component: Projects,
-      props: {
-        containerId: 'Projects',
-        containerStyles: { backgroundImage: 'url("img/shiny_overlay.svg")', backgroundSize: 'cover' },
+        props: {
+          containerId: 'Projects',
+          containerStyles: {
+            position: 'relative',
+            background:
+              'linear-gradient(180deg, rgba(15, 20, 28, 0.72) 0%, rgba(11, 15, 22, 0.92) 100%)',
+            borderTop: '1px solid rgba(148, 163, 184, 0.1)',
+            borderBottom: '1px solid rgba(148, 163, 184, 0.1)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02), inset 0 -1px 0 rgba(255,255,255,0.02)',
+          },
+        },
       },
-    },
     {
       label: 'Contact',
       Component: Contact,
-      props: {
-        containerId: 'Contact',
-        containerStyles: { backgroundImage: 'url("img/simple_shiny.svg")', backgroundSize: 'cover' },
-      },
-    },
-  ];
-
-  const theme = useMemo(
-    () =>
-      createTheme({
-        ...themeData,
-        palette: {
-          ...themeData.palette,
-          mode: prefersDarkMode ? 'dark' : 'light',
+        props: {
+          containerId: 'Contact',
+          containerStyles: {
+            background:
+              'linear-gradient(180deg, rgba(15, 20, 28, 0) 0%, rgba(15, 20, 28, 0.34) 100%)',
+          },
         },
-      }),
-    [prefersDarkMode]
-  );
+      },
+    ];
+
+  const theme = useMemo(() => createTheme(themeData), []);
 
   const handleInView = page => isSelected => {
     if (isSelected && !navClicked) {
@@ -92,37 +90,50 @@ function App(props) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <AppBar selected={selectedNav} setSelected={setSelected} setNavClicked={setNavClicked} />
+      <Box sx={{ position: 'relative', overflowX: 'clip' }}>
+        <AppBar selected={selectedNav} setSelected={setSelected} setNavClicked={setNavClicked} />
 
-      {screens.map(({ Component, ...screen }) => (
-        <InView key={screen.label} onChange={handleInView(screen.label)} threshold={0.8}>
-          {({ ref }) => (
-            <div ref={ref}>
-              <ScreenContainer {...screen.props}>
-                <Component setSelectedPage={setSelected} setNavClicked={setNavClicked} />
-              </ScreenContainer>
-            </div>
-          )}
-        </InView>
-      ))}
+        {screens.map(({ Component, ...screen }) => (
+          <InView key={screen.label} onChange={handleInView(screen.label)} threshold={0.55}>
+            {({ ref }) => (
+              <div ref={ref}>
+                <ScreenContainer {...screen.props}>
+                  <Component setSelectedPage={setSelected} setNavClicked={setNavClicked} />
+                </ScreenContainer>
+              </div>
+            )}
+          </InView>
+        ))}
 
-      <footer>
-        <Grid container justifyContent="center" spacing={1} sx={{ background: '#0F0C2A' }}>
-          <Grid item xs={12}>
-            <Copyright />
+        <footer>
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+            sx={{
+              px: { xs: 3, md: 8 },
+              py: 4,
+              borderTop: '1px solid rgba(148, 163, 184, 0.1)',
+              backgroundColor: 'rgba(7, 11, 17, 0.72)',
+            }}
+          >
+            <Grid item xs={12} md="auto">
+              <Copyright />
+            </Grid>
+            <Grid item xs={12} md="auto">
+              <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
+                Built with React, Vite, and a quieter visual system.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md="auto">
+              <Link href="https://console.cloud.google.com" underline="hover" target="_blank" sx={{ color: 'text.secondary', fontSize: 14 }}>
+                Hosted on Google Cloud
+              </Link>
+            </Grid>
           </Grid>
-          <Grid item sx={{ marginBottom: 3, display: 'flex' }}>
-            <span> Powered By</span>
-            <Link href="https://console.cloud.google.com" underline="none" target="_blank">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
-                height="25px"
-                style={{ marginLeft: '10px' }}
-              />
-            </Link>
-          </Grid>
-        </Grid>
-      </footer>
+        </footer>
+      </Box>
     </ThemeProvider>
   );
 }

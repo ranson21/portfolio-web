@@ -1,28 +1,18 @@
 // External Depedencies
 import React from 'react';
-import { Grid, Typography, Link } from '@mui/material';
+import { Chip, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGolang, faReact } from '@fortawesome/free-brands-svg-icons';
 import { styled } from '@mui/material/styles';
 
 import { line } from '@styles';
 
-const Container = styled(
-  Grid,
-  {}
-)(({ theme }) => ({
+const Container = styled(Grid, {})(() => ({
   flex: 1,
 }));
 
-const Article = styled(
-  Grid,
-  {}
-)(({ theme }) => ({
+const Article = styled(Grid, {})(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    scale: '0.7',
     transformOrigin: 'top center',
-    marginLeft: theme.spacing(1),
   },
 }));
 
@@ -30,14 +20,14 @@ const ProfileImage = styled(
   'img',
   {}
 )(({ theme }) => ({
-  borderRadius: '10px',
-  width: '350px',
-  height: '570px',
+  borderRadius: '24px',
+  width: '100%',
+  maxWidth: '420px',
+  height: '560px',
   objectFit: 'cover',
   objectPosition: 'top',
   [theme.breakpoints.down('sm')]: {
-    height: '200px',
-    width: 'auto',
+    height: '360px',
   },
 }));
 
@@ -47,108 +37,92 @@ const ProfileImage = styled(
 export const About = props => {
   // Create the styles for this screen
   const theme = useTheme();
+  const capabilities = ['Architecture', 'Platform engineering', 'Cloud systems', 'Terraform', 'CI/CD', 'Developer experience'];
 
   return (
     <Container container justifyContent="center" alignItems="center" spacing={{ md: 4, xs: 2 }}>
       <Grid item md={6}>
-        <Grid container justifyContent="flex-end" alignItems="center" sx={{ height: '100%' }} spacing={2}>
+        <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%' }} spacing={2}>
           <Grid item>
             <ProfileImage src="img/profile_pic.png" />
           </Grid>
           <Grid item md={12}>
-            <Typography variant="h5" component="p" fontWeight={700} textAlign="end">
-              Location
-            </Typography>
-            <Typography variant="h6" component="p" textAlign="end">
-              Sacramento, CA
-            </Typography>
-            <Typography variant="h5" component="p" fontWeight={700} textAlign="end">
-              Pronouns
-            </Typography>
-            <Typography variant="h6" component="p" textAlign="end">
-              She / Her
-            </Typography>
-            {/* <blockquote>
-              <Typography variant="h5" component="p">
-                "Alone, we can do so little; Together we can do so much."
-              </Typography>
-              <p />
-              <footer>
-                <Typography variant="h6" component="p">
-                  - Hellen Keller
-                </Typography>
-              </footer>
-            </blockquote> */}
+            <Paper elevation={0} sx={{ p: 3, borderRadius: '24px', backgroundColor: 'rgba(15, 20, 28, 0.76)' }}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+                    Collaboration
+                  </Typography>
+                  <Typography variant="h6">Remote-friendly</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+                    Pronouns
+                  </Typography>
+                  <Typography variant="h6">She / Her</Typography>
+                </Grid>
+              </Grid>
+            </Paper>
           </Grid>
         </Grid>
       </Grid>
       <Article item md={6}>
-        <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%', maxWidth: '500px' }}>
+        <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%', maxWidth: '560px' }}>
           <Grid item xs={12}>
-            <Typography variant="h2" component="p">
+            <Typography variant="h2" component="h2">
               About Me
             </Typography>
             <div>
               <span style={{ ...line(theme), marginTop: '1.2rem' }}></span>
             </div>
           </Grid>
-          <Grid item xs={12} sx={{ maxWidth: '500px' }}>
-            <Typography variant="h5" component="span">
-              I am a fullstack engineer based in{' '}
-            </Typography>
-            <Link
-              underline="none"
-              color="secondary"
-              sx={{ fontSize: '1.6rem' }}
-              href="https://www.google.com/maps/place/Sacramento,+CA"
-              target="_blank"
-            >
-              Sacramento, CA
-            </Link>
-            <Typography variant="h5" component="span">
-              . I work with a lot of different programming languages and frameworks, but I primarily specialize in{' '}
-            </Typography>
-            <Link underline="none" color="secondary" sx={{ fontSize: '1.4rem' }} href="https://react.dev/" target="_blank">
-              <FontAwesomeIcon icon={faReact} style={{ color: `${theme.palette.secondary.main} !important` }} /> React
-            </Link>
-            <Typography variant="h5" component="span">
-              {' '}
-              and{' '}
-            </Typography>
-            <Link underline="none" color="secondary" sx={{ fontSize: '1.4rem' }} href="https://go.dev/" target="_blank">
-              <FontAwesomeIcon icon={faGolang} /> Golang
-            </Link>
-            <Typography variant="h5" component="span">
-              .
+          <Grid item xs={12}>
+            <Typography sx={{ color: 'text.secondary', fontSize: '1.1rem', lineHeight: 1.9 }}>
+              I have been a software engineer since 2016, with earlier experience in systems administration that still shapes how I think
+              about reliability, operations, and the realities of production systems.
             </Typography>
           </Grid>
-          <Grid item xs={12} sx={{ maxWidth: '500px', marginTop: 5 }}>
-            <Typography variant="h5" component="span">
-              I believe that every successful project starts with Human Centered Design (HCD). Being able to understand and empathize with
-              the folks that will be using the tools and products you create is crucial. In 2019 I achieved my{' '}
+          <Grid item xs={12}>
+            <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem', lineHeight: 1.9 }}>
+              My work sits at the intersection of architecture and delivery. I operate as a principal-level engineer who helps define
+              technical direction, but I also stay hands-on in implementation, because architecture only matters when it holds up in real
+              systems. I care about human-centered product thinking just as much as clean implementation. In 2019 I completed the{' '}
+              <Link underline="none" color="secondary" href="https://www.nngroup.com/ux-certification/people/" target="_blank">
+                Nielsen Norman Group UX Certification
+              </Link>
+              , which still informs how I approach system design, developer experience, and end-user workflows.
             </Typography>
-            <Link
-              underline="none"
-              color="secondary"
-              sx={{ fontSize: '1.4rem' }}
-              href="https://www.nngroup.com/ux-certification/people/"
-              target="_blank"
-            >
-              Nielson Norman Group UI/UX Certificate
-            </Link>
-            <Typography variant="h5" component="span">
-              {' '}
-              to better guide me in my development efforts. If you want to work on a project together or have any questions{' '}
-            </Typography>
-            <Link
-              underline="none"
-              color="secondary"
-              sx={{ fontSize: '1.4rem' }}
-              href="#Contact"
-              onClick={() => props.setSelectedPage('Contact')}
-            >
-              just ask!
-            </Link>
+          </Grid>
+          <Grid item xs={12}>
+            <Stack direction="row" spacing={1.4} flexWrap="wrap" useFlexGap sx={{ pt: 0.5, pb: 1 }}>
+              {capabilities.map(item => (
+                <Chip
+                  key={item}
+                  label={item}
+                  sx={{
+                    px: 0.6,
+                    py: 2.4,
+                    borderRadius: '999px',
+                    backgroundColor: 'rgba(15, 20, 28, 0.76)',
+                    border: '1px solid rgba(148, 163, 184, 0.12)',
+                    '& .MuiChip-label': {
+                      px: 1.2,
+                    },
+                  }}
+                />
+              ))}
+            </Stack>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper elevation={0} sx={{ p: 3, borderRadius: '24px', backgroundColor: 'rgba(15, 20, 28, 0.76)' }}>
+              <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+                If you want to work on a project together, improve an engineering workflow, or get help shaping a product idea,{' '}
+                <Link underline="none" color="secondary" href="#Contact" onClick={() => props.setSelectedPage('Contact')}>
+                  reach out here
+                </Link>
+                .
+              </Typography>
+            </Paper>
           </Grid>
         </Grid>
       </Article>

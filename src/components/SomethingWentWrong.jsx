@@ -8,7 +8,7 @@ import { EmptyContainer } from '@components';
 /**
  * Error Handling Component Component
  */
-export const SomethingWentWrong = props => {
+export const SomethingWentWrong = () => {
   return (
     <EmptyContainer
       height={550}

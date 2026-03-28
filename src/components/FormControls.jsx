@@ -59,11 +59,11 @@ export const Check = ({ input, label }) => (
  * Radio Button Form component
  * @param {Object} props -- Contains form meta and field props
  */
-export const RadioButton = ({ input, ...rest }) => (
+export const RadioButton = ({ input, options = [], ...rest }) => (
   <FormControl>
     <RadioGroup {...input} {...rest}>
       {options.map(option => (
-        <FormControlLabel value={option.value} control={<Radio />} label={option.label} />
+        <FormControlLabel key={option.value} value={option.value} control={<Radio />} label={option.label} />
       ))}
     </RadioGroup>
   </FormControl>
@@ -81,7 +81,7 @@ export const FormHelper = ({ touched, error }) => touched && error && <FormHelpe
  */
 export const SelectField = ({ id, name, input, label, meta: { touched, error }, children, ...custom }) => (
   <FormControl error={touched && error}>
-    <InputLabel htmlFor={id}>Age</InputLabel>
+    <InputLabel htmlFor={id}>{label}</InputLabel>
     <Select
       {...input}
       {...custom}

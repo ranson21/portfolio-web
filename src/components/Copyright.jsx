@@ -5,7 +5,7 @@ import { APP_VERSION } from '@/version';
 
 export const Copyright = () => {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="body2" color="text.secondary" align="center">
       {APP_VERSION}
       {' Copyright © '}
       <Link color="inherit" href="#/">

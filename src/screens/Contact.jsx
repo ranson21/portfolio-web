@@ -1,6 +1,6 @@
 // External Depedencies
 import React, { useState, useEffect } from 'react';
-import { InputAdornment, Grid, Typography, Button, CircularProgress } from '@mui/material';
+import { InputAdornment, Grid, Typography, Button, CircularProgress, Paper, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Form } from 'react-final-form';
 import { Mail, AccountCircle, Send } from '@mui/icons-material';
@@ -12,25 +12,19 @@ import { Text } from '@components/FormControls';
 import { validate } from '@utils/validator';
 
 // Style dependencies remain the same...
-const Article = styled(
-  Grid,
-  {}
-)(({ theme }) => ({
+const Article = styled(Grid, {})(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    scale: '0.7',
     transformOrigin: 'top center',
   },
 }));
 
-const Image = styled(
-  'img',
-  {}
-)(({ theme }) => ({
-  width: '1000px',
-  borderRadius: '10px',
+const Image = styled('img', {})(({ theme }) => ({
+  width: '100%',
+  maxWidth: '520px',
+  borderRadius: '24px',
   [theme.breakpoints.down('sm')]: {
     height: '300px',
-    width: '300px',
+    objectFit: 'cover',
   },
 }));
 
@@ -49,7 +43,7 @@ const ThankYouMessage = () => (
   </Grid>
 );
 
-export const Contact = props => {
+export const Contact = () => {
   const theme = useTheme();
   const [formError, setFormError] = useState('');
   const [validating, setValidating] = useState(false);
@@ -113,20 +107,26 @@ export const Contact = props => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" sx={{ flex: 1 }}>
-      <Article item md={6}>
-        <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%', maxWidth: '500px' }}>
+    <Grid container justifyContent="center" alignItems="center" sx={{ flex: 1 }} spacing={4}>
+      <Article item xs={12} md={6}>
+        <Paper elevation={0} sx={{ p: { xs: 3, md: 4 }, borderRadius: '28px', backgroundColor: 'rgba(15, 20, 28, 0.78)' }}>
+          <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%', maxWidth: '560px' }}>
           {showThankYou ? (
             <ThankYouMessage />
           ) : (
             <>
               <Grid item xs={12} sx={{ marginBottom: 4 }}>
-                <Typography variant="h2" component="p">
+                <Typography variant="h2" component="h2">
                   Contact Me
                 </Typography>
                 <div>
                   <span style={{ ...line(theme), marginTop: '1.2rem' }}></span>
                 </div>
+              </Grid>
+              <Grid item xs={12} sx={{ mb: 3 }}>
+                <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+                  If you need help with a platform problem, product build, or engineering workflow, send a note. I review messages directly.
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 {formError && (
@@ -190,12 +190,21 @@ export const Contact = props => {
               </Grid>
             </>
           )}
-        </Grid>
+          </Grid>
+        </Paper>
       </Article>
-      <Grid item md={6} sx={{ marginTop: { xs: '-200px', md: 0 } }}>
-        <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%' }}>
+      <Grid item xs={12} md={6}>
+        <Stack spacing={3} alignItems="center">
           <Image src={'img/contact_me.png'} />
-        </Grid>
+          <Paper elevation={0} sx={{ p: 3, borderRadius: '24px', width: '100%', maxWidth: '520px', backgroundColor: 'rgba(15, 20, 28, 0.7)' }}>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              Preferred conversations
+            </Typography>
+            <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+              Platform modernization, frontend rebuilds, internal tools, delivery workflows, and technical direction for early-stage products.
+            </Typography>
+          </Paper>
+        </Stack>
       </Grid>
     </Grid>
   );

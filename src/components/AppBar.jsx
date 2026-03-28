@@ -1,29 +1,15 @@
 // External Dependencies
-import React, { useEffect, useCallback } from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
-import {
-  useScrollTrigger,
-  Grid,
-  AppBar as MAppBar,
-  Toolbar,
-  IconButton,
-  Box,
-  Menu,
-  MenuItem,
-  Typography,
-  Button,
-  Link,
-} from '@mui/material';
+import { useScrollTrigger, Grid, AppBar as MAppBar, Toolbar, IconButton, Box, Menu, MenuItem, Typography, Button, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Send, Menu as MenuIcon, DownloadOutlined } from '@mui/icons-material';
+import { Menu as MenuIcon, DownloadOutlined } from '@mui/icons-material';
 
 // Component Dependencies
 import { Logo } from '@components/Logo';
 import { selectedItem } from '@styles';
 
 function ElevationScroll({ children }) {
-  const theme = useTheme();
-
   // Note that you normally won't need to set the window ref as useScrollTrigger
   // will default to window.
   // This is only being set here because the demo is in an iframe.
@@ -44,12 +30,7 @@ const StyledAppBar = styled(
   MAppBar,
   {}
 )(({ theme }) => ({
-  backgroundImage: 'linear-gradient(to right, #0f0c29, #302b63, #24243e)',
   zIndex: theme.zIndex.drawer - 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
 }));
 
 /**
@@ -57,9 +38,7 @@ const StyledAppBar = styled(
  * @param {object} props -- Props Contain User Details for AppBar
  */
 export const AppBar = props => {
-  const theme = useTheme();
-
-  const selectedStyles = selectedItem(theme);
+  const selectedStyles = selectedItem(useTheme());
 
   // Create the JSS Styles
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -75,23 +54,25 @@ export const AppBar = props => {
   return (
     <ElevationScroll {...props}>
       <StyledAppBar>
-        <Toolbar>
+        <Toolbar sx={{ minHeight: 80, gap: 2 }}>
           <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', columnGap: '15px', alignItems: 'center' }}>
             <Logo />
-            <Typography sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>abby@abbyranson.com</Typography>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection: 'column' }}>
+              <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>Abigail Ranson</Typography>
+              <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>Principal engineer, architect, and hands-on builder</Typography>
+            </Box>
           </Box>
           <Box
             sx={{
-              flexGrow: 1,
-              textAlign: { sm: 'center', xs: 'flex-start' },
-              marginLeft: { sm: '0', xs: 12 },
+              display: { xs: 'none', xl: 'block' },
               position: 'absolute',
-              width: '100%',
+              left: '50%',
+              transform: 'translateX(-50%)',
               zIndex: -1,
             }}
           >
-            <Typography sx={{ fontSize: { xs: 18, md: 28 } }} fontFamily="Satisfy, cursive">
-              Abby Ranson
+            <Typography sx={{ fontSize: 13, letterSpacing: '0.22em', color: 'text.secondary', textTransform: 'uppercase' }}>
+              Remote collaboration
             </Typography>
           </Box>
           <Box>
@@ -100,12 +81,19 @@ export const AppBar = props => {
                 <Grid key={page} item sx={{ flexGrow: 0, display: { xs: 'none', lg: 'flex' } }}>
                   <Button
                     href={`#${page}`}
-                    onClick={e => {
+                    onClick={() => {
                       props.setNavClicked(true);
 
                       props.setSelected(page);
                     }}
-                    sx={{ my: 2, color: 'white', display: 'block', ...(props.selected === page ? { ...selectedStyles } : {}) }}
+                    sx={{
+                      my: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: 'text.secondary',
+                      borderRadius: '999px',
+                      ...(props.selected === page ? { ...selectedStyles } : {}),
+                    }}
                   >
                     {page}
                   </Button>
@@ -116,9 +104,10 @@ export const AppBar = props => {
                   download
                   href="docs/2024-12-01-resume.pdf"
                   size="small"
-                  variant="contained"
+                  variant="outlined"
                   color="secondary"
                   endIcon={<DownloadOutlined />}
+                  sx={{ display: 'flex', alignItems: 'center' }}
                 >
                   Resume
                 </Button>
@@ -156,7 +145,7 @@ export const AppBar = props => {
             >
               {pages.map(page => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link color="white" underline="none" href={`#${page}`}>
+                  <Link color="text.primary" underline="none" href={`#${page}`}>
                     <Typography textAlign="center" sx={props.selected === page ? { ...selectedStyles } : {}}>
                       {page}
                     </Typography>

@@ -1,15 +1,13 @@
 // External Dependencies
 import React from 'react';
-import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
-import { useMediaQuery, CssBaseline } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
 
 /**
  * Method to wrap the application with a theme
  * @param {Object} props -- Contains the component children and user settings
  */
 export const ThemeWrapper = ({ children, ...props }) => {
-  const mode = useMediaQuery('(prefers-color-scheme: dark)') ? 'dark' : 'light';
-
   const theme = createTheme({
     palette: {
       mode: 'dark',
