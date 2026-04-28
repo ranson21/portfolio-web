@@ -2,12 +2,13 @@ import { useState, useMemo, useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Link, Stack, Typography } from '@mui/material';
 import { InView } from 'react-intersection-observer';
 
 import themeData from '@/styles/theme';
 import { AppBar } from '@components/AppBar';
 import { Copyright } from '@components/Copyright';
+import GoogleCloudLogo from '@components/icons/GoogleCloudLogo';
 import { ScreenContainer } from './containers/Screen';
 import Home from './screens/Home';
 import About from './screens/About';
@@ -115,20 +116,27 @@ function App() {
               px: { xs: 3, md: 8 },
               py: { xs: 2.5, md: 3 },
               backgroundColor: 'rgba(7, 11, 17, 0.72)',
+              borderTop: '1px solid rgba(148, 163, 184, 0.08)',
             }}
           >
             <Grid item xs={12} md="auto">
               <Copyright />
             </Grid>
             <Grid item xs={12} md="auto">
-              <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
-                Built with React, Vite, and a quieter visual system.
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md="auto">
-              <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
-                Hosted on Google Cloud — Firebase Hosting
-              </Typography>
+              <Stack direction="row" spacing={1.25} alignItems="center" justifyContent={{ xs: 'center', md: 'flex-end' }}>
+                <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
+                  Powered by
+                </Typography>
+                <Link
+                  href="https://console.cloud.google.com"
+                  target="_blank"
+                  rel="noopener"
+                  underline="none"
+                  sx={{ display: 'inline-flex', alignItems: 'center', lineHeight: 0, opacity: 0.85, '&:hover': { opacity: 1 } }}
+                >
+                  <GoogleCloudLogo height={22} />
+                </Link>
+              </Stack>
             </Grid>
           </Grid>
         </footer>

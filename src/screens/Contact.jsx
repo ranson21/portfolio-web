@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { InputAdornment, Grid, Typography, Button, CircularProgress, Paper, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Form } from 'react-final-form';
 import { Mail, AccountCircle, Send } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
 
 // Style dependencies
 import { line } from '@styles';
@@ -19,15 +19,6 @@ const Article = styled(Grid, {})(({ theme }) => ({
   },
 }));
 
-const Image = styled('img', {})(({ theme }) => ({
-  width: '100%',
-  maxWidth: '520px',
-  borderRadius: '24px',
-  [theme.breakpoints.down('sm')]: {
-    height: '300px',
-    objectFit: 'cover',
-  },
-}));
 
 const ThankYouMessage = () => (
   <Grid container spacing={3} sx={{ textAlign: 'center' }}>
@@ -206,7 +197,36 @@ export const Contact = () => {
       </Article>
       <Grid item xs={12} md={6}>
         <Stack spacing={3} alignItems="center">
-          <Image src={'img/contact_me.png'} />
+          {/* Editorial card replacing the old purple illustration */}
+          <Paper elevation={0} sx={{ p: 3, borderRadius: '24px', width: '100%', maxWidth: '520px', backgroundColor: 'rgba(15, 20, 28, 0.7)' }}>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              How I prefer to work
+            </Typography>
+            <Typography sx={{ color: 'text.secondary', lineHeight: 1.8, mb: 2 }}>
+              I read every message and aim to respond within one or two business days. A brief note
+              about what you&apos;re building and what kind of collaboration you have in mind goes a
+              long way.
+            </Typography>
+            <Stack direction="row" spacing={0} flexWrap="wrap" sx={{ gap: 1 }}>
+              {['1–2 business day response', 'Platform engineering', 'AI infrastructure', 'Regulated systems'].map((tag) => (
+                <Typography
+                  key={tag}
+                  variant="caption"
+                  sx={{
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: '999px',
+                    border: '1px solid rgba(148, 163, 184, 0.2)',
+                    color: 'text.secondary',
+                    fontSize: '0.72rem',
+                    letterSpacing: '0.02em',
+                  }}
+                >
+                  {tag}
+                </Typography>
+              ))}
+            </Stack>
+          </Paper>
           <Paper elevation={0} sx={{ p: 3, borderRadius: '24px', width: '100%', maxWidth: '520px', backgroundColor: 'rgba(15, 20, 28, 0.7)' }}>
             <Typography variant="h6" sx={{ mb: 1 }}>
               {contactContent.preferredTitle}
