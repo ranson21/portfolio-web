@@ -15,7 +15,7 @@ export const Copyright = () => {
       <Link color="inherit" href="#/">
         Abby Ranson
       </Link>
-      {` · v${APP_VERSION}`}
+      {` · ${APP_VERSION}`}
     </Typography>
   );
 };
