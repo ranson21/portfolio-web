@@ -25,7 +25,7 @@ export const heroContent = {
 };
 
 export const aboutContent = {
-  capabilities: ['Architecture', 'Platform engineering', 'Cloud systems', 'Terraform', 'CI/CD', 'Developer experience'],
+  capabilities: ['Architecture', 'Platform engineering', 'Cloud systems', 'CI/CD', 'Developer experience'],
   intro:
     'I have been a software engineer since 2016, with earlier systems administration experience that still shapes how I think about reliability, operations, and the realities of production systems.',
   philosophy:
@@ -34,6 +34,7 @@ export const aboutContent = {
     'Employers and clients typically bring me in when they need clearer architecture, stronger platform foundations, better engineering workflows, or a senior technical partner who can move between high-level design and real delivery work without losing momentum.',
   credentialLabel: 'Nielsen Norman Group UX Certification',
   credentialHref: 'https://www.nngroup.com/ux-certification/people/',
+  credentialFooter: ', which still informs how I approach system design, developer experience, and end-user workflows.',
   collaborationLabel: 'Remote-friendly',
   pronouns: 'She / Her',
   hiringSignals: [
@@ -86,8 +87,7 @@ export const contactContent = {
   intro:
     'Reach out if you need principal-level engineering support, clearer architecture, stronger delivery systems, or a senior technical partner who can move from strategy into implementation.',
   thankYouTitle: 'Message received',
-  thankYouBody:
-    'Thank you for reaching out. I review messages directly and will follow up as soon as I can.',
+  thankYouBody: 'Thank you for reaching out. I review messages directly and will follow up as soon as I can.',
   preferredTitle: 'Good reasons to reach out',
   preferredTopics: [
     'Platform modernization and architectural guidance',

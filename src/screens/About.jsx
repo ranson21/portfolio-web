@@ -7,11 +7,17 @@ import { styled } from '@mui/material/styles';
 import { line } from '@styles';
 import { aboutContent } from '@/content/portfolioContent';
 
-const Container = styled(Grid, {})(() => ({
+const Container = styled(
+  Grid,
+  {},
+)(() => ({
   flex: 1,
 }));
 
-const Article = styled(Grid, {})(({ theme }) => ({
+const Article = styled(
+  Grid,
+  {},
+)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     transformOrigin: 'top center',
   },
@@ -19,7 +25,7 @@ const Article = styled(Grid, {})(({ theme }) => ({
 
 const ProfileImage = styled(
   'img',
-  {}
+  {},
 )(({ theme }) => ({
   borderRadius: '24px',
   width: '100%',
@@ -77,9 +83,7 @@ export const About = props => {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <Typography sx={{ color: 'text.secondary', fontSize: '1.1rem', lineHeight: 1.9 }}>
-              {aboutContent.intro}
-            </Typography>
+            <Typography sx={{ color: 'text.secondary', fontSize: '1.1rem', lineHeight: 1.9 }}>{aboutContent.intro}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem', lineHeight: 1.9 }}>
@@ -87,13 +91,11 @@ export const About = props => {
               <Link underline="none" color="secondary" href={aboutContent.credentialHref} target="_blank">
                 {aboutContent.credentialLabel}
               </Link>
-              , which still informs how I approach system design, developer experience, and end-user workflows.
+              {aboutContent.credentialFooter}
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem', lineHeight: 1.9 }}>
-              {aboutContent.outcomes}
-            </Typography>
+            <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem', lineHeight: 1.9 }}>{aboutContent.outcomes}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Stack direction="row" spacing={1.4} flexWrap="wrap" useFlexGap sx={{ pt: 0.5, pb: 1 }}>
