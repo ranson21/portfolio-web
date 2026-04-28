@@ -10,23 +10,16 @@ export const container = {
 };
 
 export const selectedItem = theme => ({
-  textDecoration: 'underline !important',
-  textUnderlineOffset: '0.5rem !important',
-  textDecorationColor: `${theme.palette.secondary.light} !important`,
+  color: `${theme.palette.text.primary} !important`,
+  backgroundColor: 'rgba(148, 163, 184, 0.1)',
+  border: '1px solid rgba(148, 163, 184, 0.16)',
 });
 
 export const line = theme => ({
   display: 'block',
-  width: '91px',
+  width: '88px',
   marginBottom: '1.2rem',
-  height: '4px',
-  borderRadius: '5px',
-  background: theme.palette.secondary.main,
+  height: '3px',
+  borderRadius: '999px',
+  background: `linear-gradient(90deg, ${theme.palette.secondary.main} 0%, rgba(148, 163, 184, 0.08) 100%)`,
 });
-
-/* CSS HEX */
-// --oxford-blue: #0f0c29ff;
-// --battleship-gray: #8f857dff;
-// --true-blue: #3066beff;
-// --non-photo-blue: #92dce5ff;
-// --icterine: #fcfc62ff;

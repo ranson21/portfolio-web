@@ -1,182 +1,96 @@
-# Portfolio Web Application 🎨
+# Portfolio Web Application
 
 [![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/) [![Vite](https://img.shields.io/badge/Vite-5.1.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/) [![MUI](https://img.shields.io/badge/MUI-5.15.12-007FFF?style=for-the-badge&logo=mui&logoColor=white)](https://mui.com/)
 
-A modern, responsive portfolio web application built with React and Vite, featuring Material UI components and state management with Redux.
+Personal portfolio site for Abigail Ranson. Single-page React app with anchor-based navigation, built with Vite and Material UI.
 
-## 🚀 Features
+## Stack
 
-- Modern React 18 with Hooks
-- Lightning-fast builds with Vite
-- Material UI components and styling
-- Redux state management
-- Form handling with React Final Form
-- Route management with React Router
-- Responsive design
-- SASS styling support
-- Intersection Observer for scroll animations
-- Development proxy configuration
-- Asset optimization and caching
-- Module aliasing for clean imports
-- Firebase integration for hosting and CI/CD
+- **React 18** with hooks (`useState`, `useMemo`, `useEffect`)
+- **Vite 5** — build tooling and dev server (proxies `/api` to `localhost:8080`)
+- **MUI 5** — component library and theming (`@mui/material`, `@mui/icons-material`)
+- **react-final-form** — contact form state and validation
+- **react-intersection-observer** — scroll-driven nav highlight
+- **Firebase Hosting** — production deployment via `firebase.json`
 
-## 📦 Prerequisites
+## Prerequisites
 
 - Node.js (LTS version recommended)
-- npm or yarn package manager
-- Firebase CLI (`npm install -g firebase-tools`)
-- Google Cloud account (for Firebase)
+- npm
 
-## 🔥 Firebase Setup
+## Installation
 
-### Initial Project Setup
-
-1. Create a new Firebase project:
-   ```bash
-   # Login to Firebase
-   firebase login
-
-   # Initialize Firebase in your project
-   firebase init
-   ```
-
-2. Select the following Firebase features when prompted:
-   - Hosting
-   - GitHub Actions deployment (optional)
-   - Emulators (optional)
-
-### Setting up Continuous Integration
-
-1. Generate a Firebase CI token:
-   ```bash
-   firebase login:ci
-   ```
-
-2. Add the token to your GitHub repository:
-   - Go to Repository Settings > Secrets
-   - Create a new secret named `FIREBASE_TOKEN`
-   - Paste the CI token as the value
-
-3. The `.github/workflows/firebase-hosting-merge.yml` file will be automatically created during Firebase init. Ensure it contains:
-   ```yaml
-   name: Deploy to Firebase Hosting
-   on:
-     push:
-       branches: [ main ]
-   jobs:
-     build_and_deploy:
-       runs-on: ubuntu-latest
-       steps:
-         - uses: actions/checkout@v3
-         - run: npm ci && npm run build
-         - uses: FirebaseExtended/action-hosting-deploy@v0
-           with:
-             repoToken: '${{ secrets.GITHUB_TOKEN }}'
-             firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
-             channelId: live
-   ```
-
-## 🛠️ Installation
-
-1. Clone the repository:
 ```bash
 git clone https://github.com/ranson21/portfolio-web
-cd portfolio-web
-```
-
-2. Install dependencies:
-```bash
+cd portfolio-web/apps/web/portfolio
 npm install
-# or
-yarn install
 ```
 
-## 🔧 Development
+## Development
 
-Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-The application will open automatically in your default browser at `http://localhost:5173`.
+Opens the app at `http://localhost:5173`. API calls to `/api/*` are proxied to `http://localhost:8080` (see `vite.config.js`).
 
-## 🏗️ Build
+## Build
 
-Create a production build:
 ```bash
 npm run build
-# or
-yarn build
 ```
 
-Preview the production build:
+Output goes to `dist/`. Firebase Hosting serves from `dist/` per `firebase.json`.
+
 ```bash
-npm run preview
-# or
-yarn preview
+npm run preview   # preview the production build locally
 ```
 
-## 📁 Project Structure
+## Linting
 
-```
-portfolio-web/
-├── src/
-│   ├── components/     # React components
-│   ├── styles/        # SASS/CSS styles
-│   ├── utils/         # Utility functions
-│   └── index.jsx      # Application entry point
-├── public/            # Static assets
-└── vite.config.js     # Vite configuration
-```
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-APP_VERSION=development
-FIREBASE_API_KEY=your_api_key
-FIREBASE_PROJECT_ID=your_project_id
-```
-
-### Proxy Configuration
-
-The development server is configured to proxy `/api` requests to `http://localhost:8080`. Modify `vite.config.js` to change this configuration.
-
-## 🧪 Linting
-
-Run ESLint:
 ```bash
 npm run lint
-# or
-yarn lint
 ```
 
-## 🤝 Contributing
+Uses ESLint with `--max-warnings 0` — zero warnings allowed.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Project Structure
 
-## 📄 License
+```
+apps/web/portfolio/
+├── src/
+│   ├── components/     # Shared UI components (AppBar, FormControls, etc.)
+│   ├── containers/     # Layout wrappers (Screen)
+│   ├── content/        # All copy and data (portfolioContent.js)
+│   ├── screens/        # Page-level components (Home, About, Projects, Contact)
+│   ├── styles/         # MUI theme and shared style utilities
+│   ├── utils/          # Validator and helpers
+│   └── index.jsx       # App entry point
+├── public/             # Static assets (img/, docs/, robots.txt, etc.)
+├── index.html          # HTML shell with meta/SEO tags
+├── firebase.json       # Firebase Hosting config
+└── vite.config.js      # Vite config with path aliases and proxy
+```
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Environment Variables
 
-## 👤 Author
+Create a `.env` file at the app root:
 
-Abigail Ranson
-- Website: [abbyranson.com](https://abbyranson.com)
-- GitHub: [@ranson21](https://github.com/ranson21)
+```env
+VITE_APP_API=http://localhost:8080/api/contact_me
+```
 
-## 🙏 Acknowledgments
+The contact form POST target is read from `VITE_APP_API` at runtime.
 
-- React team for the amazing framework
-- Vite team for the lightning-fast build tool
-- Material-UI team for the component library
-- Firebase team for the hosting and CI/CD platform
+## Deployment
+
+Hosted on Firebase Hosting (Google Cloud). All routes rewrite to `/index.html` for SPA navigation.
+
+```bash
+firebase login
+firebase deploy --only hosting
+```
+
+## Author
+
+Abigail Ranson — [abbyranson.com](https://abbyranson.com) · [@ranson21](https://github.com/ranson21)

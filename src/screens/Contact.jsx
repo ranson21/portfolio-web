@@ -1,80 +1,65 @@
 // External Depedencies
 import React, { useState, useEffect } from 'react';
-import { InputAdornment, Grid, Typography, Button, CircularProgress } from '@mui/material';
+import { InputAdornment, Grid, Typography, Button, CircularProgress, Paper, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Form } from 'react-final-form';
 import { Mail, AccountCircle, Send } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
 
 // Style dependencies
 import { line } from '@styles';
 import { Text } from '@components/FormControls';
 import { validate } from '@utils/validator';
+import { contactContent } from '@/content/portfolioContent';
 
 // Style dependencies remain the same...
-const Article = styled(
-  Grid,
-  {}
-)(({ theme }) => ({
+const Article = styled(Grid, {})(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    scale: '0.7',
     transformOrigin: 'top center',
   },
 }));
 
-const Image = styled(
-  'img',
-  {}
-)(({ theme }) => ({
-  width: '1000px',
-  borderRadius: '10px',
-  [theme.breakpoints.down('sm')]: {
-    height: '300px',
-    width: '300px',
-  },
-}));
 
 const ThankYouMessage = () => (
   <Grid container spacing={3} sx={{ textAlign: 'center' }}>
     <Grid item xs={12}>
       <Typography variant="h2" component="h2" gutterBottom>
-        Thank You
+        {contactContent.thankYouTitle}
       </Typography>
     </Grid>
     <Grid item xs={12}>
       <Typography variant="subtitle1" color="text.secondary">
-        I appreciate you reaching out. I will review your message and respond within 24-48 hours. Thank you for your patience.
+        {contactContent.thankYouBody}
       </Typography>
     </Grid>
   </Grid>
 );
 
-export const Contact = props => {
+export const Contact = () => {
   const theme = useTheme();
   const [formError, setFormError] = useState('');
   const [validating, setValidating] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
 
   useEffect(() => {
-    // Check if there's a recent message submission
-    const messageSentTime = localStorage.getItem('messageSentTime');
+    // Check if there's a recent message submission in this session
+    const messageSentTime = sessionStorage.getItem('messageSentTime');
     if (messageSentTime) {
       const timeDiff = Date.now() - parseInt(messageSentTime);
-      const fifteenMinutes = 15 * 60 * 1000; // 15 minutes in milliseconds
+      const fifteenMinutes = 15 * 60 * 1000;
 
       if (timeDiff < fifteenMinutes) {
         setShowThankYou(true);
 
-        // Set timeout to hide thank you message after remaining time
         const remainingTime = fifteenMinutes - timeDiff;
         const timeout = setTimeout(() => {
           setShowThankYou(false);
-          localStorage.removeItem('messageSentTime');
+          sessionStorage.removeItem('messageSentTime');
         }, remainingTime);
 
         return () => clearTimeout(timeout);
       } else {
-        localStorage.removeItem('messageSentTime');
+        sessionStorage.removeItem('messageSentTime');
       }
     }
   }, []);
@@ -96,14 +81,14 @@ export const Contact = props => {
         throw new Error(`Failed to send message: ${response.statusText}`);
       }
 
-      // Store the submission time
-      localStorage.setItem('messageSentTime', Date.now().toString());
+      // Store the submission time in session storage (clears on tab close)
+      sessionStorage.setItem('messageSentTime', Date.now().toString());
       setShowThankYou(true);
 
-      // Set timeout to hide thank you message after 15 minutes
+      // Hide thank you message after 15 minutes
       setTimeout(() => {
         setShowThankYou(false);
-        localStorage.removeItem('messageSentTime');
+        sessionStorage.removeItem('messageSentTime');
       }, 15 * 60 * 1000);
     } catch (error) {
       setFormError(error?.message || 'Failed to send message. Please try again.');
@@ -113,20 +98,37 @@ export const Contact = props => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" sx={{ flex: 1 }}>
-      <Article item md={6}>
-        <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%', maxWidth: '500px' }}>
+    <Grid
+      container
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+        flex: 1,
+        position: 'relative',
+        pt: { xs: 2, md: 3 },
+        borderTop: '1px solid rgba(148, 163, 184, 0.12)',
+      }}
+      spacing={4}
+    >
+      <Article item xs={12} md={6}>
+        <Paper elevation={0} sx={{ p: { xs: 3, md: 4 }, borderRadius: '28px', backgroundColor: 'rgba(15, 20, 28, 0.78)' }}>
+          <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%', maxWidth: '560px' }}>
           {showThankYou ? (
             <ThankYouMessage />
           ) : (
             <>
               <Grid item xs={12} sx={{ marginBottom: 4 }}>
-                <Typography variant="h2" component="p">
+                <Typography variant="h2" component="h2">
                   Contact Me
                 </Typography>
                 <div>
                   <span style={{ ...line(theme), marginTop: '1.2rem' }}></span>
                 </div>
+              </Grid>
+              <Grid item xs={12} sx={{ mb: 3 }}>
+                <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+                  {contactContent.intro}
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 {formError && (
@@ -180,7 +182,7 @@ export const Contact = props => {
                             disabled={invalid || submitting || validating}
                             endIcon={submitting || validating ? <CircularProgress size={20} /> : <Send />}
                           >
-                            Send
+                            {contactContent.ctaLabel}
                           </Button>
                         </Grid>
                       </Grid>
@@ -190,12 +192,54 @@ export const Contact = props => {
               </Grid>
             </>
           )}
-        </Grid>
+          </Grid>
+        </Paper>
       </Article>
-      <Grid item md={6} sx={{ marginTop: { xs: '-200px', md: 0 } }}>
-        <Grid container justifyContent="center" alignItems="center" sx={{ height: '100%' }}>
-          <Image src={'img/contact_me.png'} />
-        </Grid>
+      <Grid item xs={12} md={6}>
+        <Stack spacing={3} alignItems="center">
+          {/* Editorial card replacing the old purple illustration */}
+          <Paper elevation={0} sx={{ p: 3, borderRadius: '24px', width: '100%', maxWidth: '520px', backgroundColor: 'rgba(15, 20, 28, 0.7)' }}>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              How I prefer to work
+            </Typography>
+            <Typography sx={{ color: 'text.secondary', lineHeight: 1.8, mb: 2 }}>
+              I read every message and aim to respond within one or two business days. A brief note
+              about what you&apos;re building and what kind of collaboration you have in mind goes a
+              long way.
+            </Typography>
+            <Stack direction="row" spacing={0} flexWrap="wrap" sx={{ gap: 1 }}>
+              {['1–2 business day response', 'Platform engineering', 'AI infrastructure', 'Regulated systems'].map((tag) => (
+                <Typography
+                  key={tag}
+                  variant="caption"
+                  sx={{
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: '999px',
+                    border: '1px solid rgba(148, 163, 184, 0.2)',
+                    color: 'text.secondary',
+                    fontSize: '0.72rem',
+                    letterSpacing: '0.02em',
+                  }}
+                >
+                  {tag}
+                </Typography>
+              ))}
+            </Stack>
+          </Paper>
+          <Paper elevation={0} sx={{ p: 3, borderRadius: '24px', width: '100%', maxWidth: '520px', backgroundColor: 'rgba(15, 20, 28, 0.7)' }}>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              {contactContent.preferredTitle}
+            </Typography>
+            <Stack spacing={1.1}>
+              {contactContent.preferredTopics.map(topic => (
+                <Typography key={topic} sx={{ color: 'text.secondary', lineHeight: 1.75 }}>
+                  {`• ${topic}`}
+                </Typography>
+              ))}
+            </Stack>
+          </Paper>
+        </Stack>
       </Grid>
     </Grid>
   );

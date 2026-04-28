@@ -1,6 +1,6 @@
 #!/bin/bash
 repo="mystro-web"
-owner="RansonTesting"
+owner="ranson21"
 
 # Set the release variables
 release=$(jq -r '.version' <package.json)
