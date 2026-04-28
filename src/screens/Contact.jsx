@@ -51,25 +51,24 @@ export const Contact = () => {
   const [showThankYou, setShowThankYou] = useState(false);
 
   useEffect(() => {
-    // Check if there's a recent message submission
-    const messageSentTime = localStorage.getItem('messageSentTime');
+    // Check if there's a recent message submission in this session
+    const messageSentTime = sessionStorage.getItem('messageSentTime');
     if (messageSentTime) {
       const timeDiff = Date.now() - parseInt(messageSentTime);
-      const fifteenMinutes = 15 * 60 * 1000; // 15 minutes in milliseconds
+      const fifteenMinutes = 15 * 60 * 1000;
 
       if (timeDiff < fifteenMinutes) {
         setShowThankYou(true);
 
-        // Set timeout to hide thank you message after remaining time
         const remainingTime = fifteenMinutes - timeDiff;
         const timeout = setTimeout(() => {
           setShowThankYou(false);
-          localStorage.removeItem('messageSentTime');
+          sessionStorage.removeItem('messageSentTime');
         }, remainingTime);
 
         return () => clearTimeout(timeout);
       } else {
-        localStorage.removeItem('messageSentTime');
+        sessionStorage.removeItem('messageSentTime');
       }
     }
   }, []);
@@ -91,14 +90,14 @@ export const Contact = () => {
         throw new Error(`Failed to send message: ${response.statusText}`);
       }
 
-      // Store the submission time
-      localStorage.setItem('messageSentTime', Date.now().toString());
+      // Store the submission time in session storage (clears on tab close)
+      sessionStorage.setItem('messageSentTime', Date.now().toString());
       setShowThankYou(true);
 
-      // Set timeout to hide thank you message after 15 minutes
+      // Hide thank you message after 15 minutes
       setTimeout(() => {
         setShowThankYou(false);
-        localStorage.removeItem('messageSentTime');
+        sessionStorage.removeItem('messageSentTime');
       }, 15 * 60 * 1000);
     } catch (error) {
       setFormError(error?.message || 'Failed to send message. Please try again.');

@@ -1,13 +1,17 @@
 // External Dependencies
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { useScrollTrigger, Grid, AppBar as MAppBar, Toolbar, IconButton, Box, Menu, MenuItem, Typography, Button, Link } from '@mui/material';
+import { useScrollTrigger, Grid, AppBar as MAppBar, Toolbar, IconButton, Box, Menu, MenuItem, Typography, Button, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuList, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Menu as MenuIcon, DownloadOutlined } from '@mui/icons-material';
+import { Menu as MenuIcon, OpenInNew, ArrowDropDown, DownloadOutlined } from '@mui/icons-material';
 
 // Component Dependencies
 import { Logo } from '@components/Logo';
 import { selectedItem } from '@styles';
+
+// The most recent dated resume PDFs — update these when new PDFs are generated
+const RESUME_PDF_URL = 'docs/2026-04-28-resume.pdf';
+const RESUME_HTML_URL = 'docs/resume.html';
 
 function ElevationScroll({ children }) {
   // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -40,7 +44,7 @@ const StyledAppBar = styled(
 export const AppBar = props => {
   const selectedStyles = selectedItem(useTheme());
 
-  // Create the JSS Styles
+  // Mobile nav menu state
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = event => {
@@ -49,6 +53,21 @@ export const AppBar = props => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  // Resume split-button dropdown state
+  const [resumeMenuOpen, setResumeMenuOpen] = React.useState(false);
+  const resumeAnchorRef = React.useRef(null);
+
+  const handleResumeMenuToggle = () => {
+    setResumeMenuOpen(prev => !prev);
+  };
+
+  const handleResumeMenuClose = event => {
+    if (resumeAnchorRef.current && resumeAnchorRef.current.contains(event.target)) {
+      return;
+    }
+    setResumeMenuOpen(false);
   };
 
   return (
@@ -100,17 +119,66 @@ export const AppBar = props => {
                 </Grid>
               ))}
               <Grid item>
-                <Button
-                  download
-                  href="docs/2026-03-28-resume.pdf"
+                {/* Split button: primary = View Resume, dropdown = Download PDF */}
+                <ButtonGroup
+                  ref={resumeAnchorRef}
                   size="small"
                   variant="outlined"
                   color="secondary"
-                  endIcon={<DownloadOutlined />}
-                  sx={{ display: 'flex', alignItems: 'center' }}
+                  aria-label="resume actions"
                 >
-                  Resume
-                </Button>
+                  <Button
+                    href={RESUME_HTML_URL}
+                    target="_blank"
+                    rel="noopener"
+                    endIcon={<OpenInNew sx={{ fontSize: '14px !important' }} />}
+                    sx={{ display: 'flex', alignItems: 'center' }}
+                  >
+                    Resume
+                  </Button>
+                  <Button
+                    size="small"
+                    aria-label="download resume options"
+                    aria-haspopup="menu"
+                    aria-expanded={resumeMenuOpen}
+                    onClick={handleResumeMenuToggle}
+                    sx={{ px: 0.5 }}
+                  >
+                    <ArrowDropDown />
+                  </Button>
+                </ButtonGroup>
+                <Popper
+                  sx={{ zIndex: 1300 }}
+                  open={resumeMenuOpen}
+                  anchorEl={resumeAnchorRef.current}
+                  role={undefined}
+                  transition
+                  disablePortal
+                  placement="bottom-end"
+                >
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{ transformOrigin: placement === 'bottom-end' ? 'right top' : 'right bottom' }}
+                    >
+                      <Paper elevation={4}>
+                        <ClickAwayListener onClickAway={handleResumeMenuClose}>
+                          <MenuList autoFocusItem dense>
+                            <MenuItem
+                              component="a"
+                              href={RESUME_PDF_URL}
+                              download
+                              onClick={() => setResumeMenuOpen(false)}
+                            >
+                              <DownloadOutlined sx={{ mr: 1, fontSize: 18 }} />
+                              Download PDF
+                            </MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
               </Grid>
             </Grid>
           </Box>

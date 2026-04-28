@@ -25,13 +25,11 @@ export const heroContent = {
 };
 
 export const aboutContent = {
-  capabilities: ['Architecture', 'Platform engineering', 'Cloud systems', 'CI/CD', 'Developer experience'],
+  capabilities: ['Platform Engineering', 'Cloud Architecture', 'Kubernetes', 'Terraform', 'CI/CD', 'Internal Developer Platforms', 'AI Infrastructure'],
   intro:
-    'I have been a software engineer since 2016, with earlier systems administration experience that still shapes how I think about reliability, operations, and the realities of production systems.',
+    'Software engineer since 2016, with earlier sysadmin roots that still shape how I think about reliability and operations.',
   philosophy:
-    'I am strongest in roles that need both technical direction and execution. I help teams make better architectural decisions, reduce delivery friction, and improve the systems around engineering, while staying hands-on enough to keep strategy grounded in implementation reality.',
-  outcomes:
-    'Employers and clients typically bring me in when they need clearer architecture, stronger platform foundations, better engineering workflows, or a senior technical partner who can move between high-level design and real delivery work without losing momentum.',
+    'I build the platform layer that engineering teams run on — internal developer platforms, delivery systems, and the policy and observability work that keeps multi-team production environments shippable.',
   credentialLabel: 'Nielsen Norman Group UX Certification',
   credentialHref: 'https://www.nngroup.com/ux-certification/people/',
   credentialFooter: ', which still informs how I approach system design, developer experience, and end-user workflows.',
@@ -85,14 +83,14 @@ export const projectContent = {
 
 export const contactContent = {
   intro:
-    'Reach out if you need principal-level engineering support, clearer architecture, stronger delivery systems, or a senior technical partner who can move from strategy into implementation.',
+    'Reach out for platform engineering work, internal developer platforms, AI-infrastructure design, or senior technical leadership on regulated multi-tenant systems.',
   thankYouTitle: 'Message received',
   thankYouBody: 'Thank you for reaching out. I review messages directly and will follow up as soon as I can.',
   preferredTitle: 'Good reasons to reach out',
   preferredTopics: [
-    'Platform modernization and architectural guidance',
-    'Developer experience, CI/CD, and delivery workflow improvement',
-    'Application rebuilds, internal tools, and technical leadership',
+    'Platform engineering and internal developer platforms',
+    'AI-infrastructure design and cloud architecture',
+    'Technical leadership on regulated or multi-tenant systems',
   ],
   ctaLabel: 'Send message',
 };

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-import { Box, Grid, Link, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { InView } from 'react-intersection-observer';
 
 import themeData from '@/styles/theme';
@@ -81,9 +81,9 @@ function App() {
   };
 
   useEffect(() => {
-    window.addEventListener('mousewheel', () => {
-      setNavClicked(false);
-    });
+    const onWheel = () => setNavClicked(false);
+    window.addEventListener('wheel', onWheel, { passive: true });
+    return () => window.removeEventListener('wheel', onWheel);
   }, []);
 
   return (
@@ -126,9 +126,9 @@ function App() {
               </Typography>
             </Grid>
             <Grid item xs={12} md="auto">
-              <Link href="https://console.cloud.google.com" underline="hover" target="_blank" sx={{ color: 'text.secondary', fontSize: 14 }}>
-                Hosted on Google Cloud
-              </Link>
+              <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
+                Hosted on Google Cloud — Firebase Hosting
+              </Typography>
             </Grid>
           </Grid>
         </footer>

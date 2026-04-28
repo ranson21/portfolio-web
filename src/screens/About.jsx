@@ -95,9 +95,6 @@ export const About = props => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem', lineHeight: 1.9 }}>{aboutContent.outcomes}</Typography>
-          </Grid>
-          <Grid item xs={12}>
             <Stack direction="row" spacing={1.4} flexWrap="wrap" useFlexGap sx={{ pt: 0.5, pb: 1 }}>
               {aboutContent.capabilities.map(item => (
                 <Chip

@@ -134,9 +134,6 @@ export const Home = props => {
       <Grid container spacing={{ xs: 6, md: 8 }} alignItems="center" sx={{ position: 'relative', zIndex: 1 }}>
         <Grid item xs={12} md={7}>
           <Stack spacing={3}>
-            <Typography sx={{ fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'secondary.main' }}>
-              {heroContent.name}
-            </Typography>
             <Typography
               component="h1"
               sx={{
@@ -194,10 +191,10 @@ export const Home = props => {
               <IconButton href="https://www.linkedin.com/in/abbyranson/" target="_blank" sx={{ border: '1px solid rgba(148, 163, 184, 0.14)' }}>
                 <LinkedIn color="secondary" />
               </IconButton>
-              <IconButton href="https://github.com/RansonTesting" target="_blank" sx={{ border: '1px solid rgba(148, 163, 184, 0.14)' }}>
+              <IconButton href="https://github.com/ranson21" target="_blank" sx={{ border: '1px solid rgba(148, 163, 184, 0.14)' }}>
                 <GitHub />
               </IconButton>
-              <IconButton href="mailto:abby@abbyranson.com" target="_blank" sx={{ border: '1px solid rgba(148, 163, 184, 0.14)' }}>
+              <IconButton href="mailto:abby@abbyranson.com" sx={{ border: '1px solid rgba(148, 163, 184, 0.14)' }}>
                 <Mail />
               </IconButton>
             </Stack>
