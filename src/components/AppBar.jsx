@@ -78,7 +78,7 @@ export const AppBar = props => {
             <Logo />
             <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection: 'column' }}>
               <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>Abigail Ranson</Typography>
-              <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>Principal engineer, architect, and hands-on technical leader</Typography>
+              <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>Senior full-stack & platform engineer, hands-on technical leader</Typography>
             </Box>
           </Box>
           <Box
