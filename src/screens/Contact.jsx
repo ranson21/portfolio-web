@@ -208,7 +208,7 @@ export const Contact = () => {
               long way.
             </Typography>
             <Stack direction="row" spacing={0} flexWrap="wrap" sx={{ gap: 1 }}>
-              {['1–2 business day response', 'Platform engineering', 'AI infrastructure', 'Regulated systems'].map((tag) => (
+              {['1–2 business day response', 'Platform engineering', 'Federal compliance', 'Regulated systems'].map((tag) => (
                 <Typography
                   key={tag}
                   variant="caption"

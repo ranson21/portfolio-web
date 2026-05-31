@@ -1,16 +1,16 @@
 export const heroContent = {
   name: 'Abigail Ranson',
-  headline: 'Principal-level engineering with architecture depth.',
+  headline: 'Senior engineering with architecture depth.',
   summary:
     'I have worked as a software engineer since 2016, following earlier systems administration experience. Today I help teams shape architecture, modernize platforms, and stay close to the code where execution quality matters most.',
-  specialties: ['Principal Engineering', 'Architecture', 'Platform Strategy', 'Hands-On Delivery'],
+  specialties: ['Full-Stack Engineering', 'Architecture', 'Platform Strategy', 'Hands-On Delivery'],
   profileTitle: 'Abby Ranson',
-  profileSubtitle: 'Principal engineer and architect',
+  profileSubtitle: 'Senior full-stack & platform engineer',
   profileSummary:
-    'Focused on platform reliability, cloud architecture, developer experience, delivery systems, and application design for teams that need scalable systems without losing operational clarity.',
+    'Focused on platform reliability, cloud infrastructure, developer experience, delivery systems, and application modernization for teams that need scalable systems without losing operational clarity.',
   employerSignals: [
     {
-      title: 'Principal-level',
+      title: 'Senior-level',
       subtitle: 'technical leadership with hands-on execution',
     },
     {
@@ -25,11 +25,11 @@ export const heroContent = {
 };
 
 export const aboutContent = {
-  capabilities: ['Platform Engineering', 'Cloud Architecture', 'Kubernetes', 'Terraform', 'CI/CD', 'Internal Developer Platforms', 'AI Infrastructure'],
+  capabilities: ['Platform Engineering', 'Cloud Infrastructure', 'Kubernetes', 'Terraform', 'CI/CD', 'Internal Developer Platforms', 'Federal Compliance'],
   intro:
     'Software engineer since 2016, with earlier sysadmin roots that still shape how I think about reliability and operations.',
   philosophy:
-    'I build the platform layer that engineering teams run on — internal developer platforms, delivery systems, and the policy and observability work that keeps multi-team production environments shippable.',
+    'I work on the platform layer engineering teams rely on — internal developer tooling, delivery systems, and the CI/CD and compliance work that keeps regulated, multi-team production environments shippable.',
   credentialLabel: 'Nielsen Norman Group UX Certification',
   credentialHref: 'https://www.nngroup.com/ux-certification/people/',
   credentialFooter: ', which still informs how I approach system design, developer experience, and end-user workflows.',
@@ -46,7 +46,7 @@ export const projectContent = {
   intro:
     'The strongest signal I can give employers is not a list of side projects. It is the pattern of work I lead: architecture decisions that hold up in production, platform improvements that make teams faster, and hands-on implementation that turns strategy into shipped systems.',
   supportingPoints: [
-    'Principal-level technical direction',
+    'Senior technical direction',
     'Hands-on delivery in production systems',
     'Platform, application, and workflow improvement',
   ],
@@ -83,13 +83,13 @@ export const projectContent = {
 
 export const contactContent = {
   intro:
-    'Reach out for platform engineering work, internal developer platforms, AI-infrastructure design, or senior technical leadership on regulated multi-tenant systems.',
+    'Reach out for platform engineering work, internal developer platforms, cloud infrastructure, or senior technical leadership on regulated multi-tenant systems.',
   thankYouTitle: 'Message received',
   thankYouBody: 'Thank you for reaching out. I review messages directly and will follow up as soon as I can.',
   preferredTitle: 'Good reasons to reach out',
   preferredTopics: [
     'Platform engineering and internal developer platforms',
-    'AI-infrastructure design and cloud architecture',
+    'Cloud infrastructure, CI/CD, and federal compliance',
     'Technical leadership on regulated or multi-tenant systems',
   ],
   ctaLabel: 'Send message',
